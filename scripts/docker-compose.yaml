@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: docker.io/library/postgres:16.3
+    container_name: postgres
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: fastapi_boilerplate
+    ports:
+      - 127.0.0.1:5432:5432
+  pgadmin:
+    image: docker.io/dpage/pgadmin4:8.8
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=i@cookding.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+    ports:
+      - 8080:80

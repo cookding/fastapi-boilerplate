@@ -1,0 +1,115 @@
+[project]
+name = "fastapi-boilerplate"
+version = "0.1.0"
+description = "FastAPI Boilerplate"
+authors = [{ name = "Wang, Tao", email = "wangtao@cookding.com" }]
+dependencies = [
+    "fastapi>=0.111.0",
+    "punq>=0.7.0",
+    "loguru>=0.7.2",
+    "prisma>=0.13.1",
+    "typing-extensions>=4.12.2",
+]
+requires-python = "==3.11.*"
+readme = "README.md"
+license = { text = "MIT" }
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+lint = { shell = """\
+    set -ex
+    mypy src
+    ruff check src tests scripts --fix
+    ruff format src tests scripts
+""" }
+db-up = "bash scripts/db-up.sh"
+db-down = "bash scripts/db-down.sh"
+prisma-format = "prisma format"
+prisma-generate = "prisma generate"
+migrate-dev-create = "prisma migrate dev --create-only"
+migrate-deploy = "prisma migrate deploy"
+migrate-status = "prisma migrate status"
+dev.cmd = "uvicorn src.app.main:app --host=${APP_HOST} --port=${APP_PORT} --log-level=${LOG_LEVEL} --reload"
+dev.env_file = ".env"
+start = "python -m src.app.main"
+test.cmd = "pytest -r A"
+test.env = { LOG_LEVEL = "error" }
+test-cov.cmd = "pytest --cov-config=.coveragerc --verbosity=3 --cov=src/app --cov-branch --cov-report term-missing tests/"
+test-cov.env = { LOG_LEVEL = "error" }
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "asgi-lifespan>=2.1.0",
+    "pytest>=8.2.2",
+    "pytest-cov>=5.0.0",
+    "ruff>=0.4.9",
+    "mypy>=1.10.0",
+    "anyio>=4.4.0",
+]
+
+[tool.prisma]
+binary_cache_dir = '.venv/prisma-binaries'
+
+[tool.mypy]
+strict = true
+follow_imports = "silent"
+ignore_missing_imports = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+disallow_untyped_decorators = true
+
+[[tool.mypy.overrides]]
+module = "src.*"
+warn_unused_ignores = false
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+check_untyped_defs = true
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+exclude = ["tests/fixtures"]
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+extend-select = [
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "PGH", # pygrep-hooks
+    "RUF", # ruff
+    "W",   # pycodestyle
+    "YTT", # flake8-2020
+]
+extend-ignore = [
+    "B008",   # function-call-in-default-argument
+    "B018",   # useless-expression
+    "B019",   # cached-instance-method
+    "RUF018", # assignment-in-assert
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.isort]
+known-first-party = ["pdm"]
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+filterwarnings = ["ignore::DeprecationWarning"]
+addopts = ["--import-mode=importlib", "--strict-config", "--strict-markers"]
+xfail_strict = true
+junit_family = "xunit2"
+testpaths = ["tests/"]
+markers = ["only"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "@abstractmethod",
+]
