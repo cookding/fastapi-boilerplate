@@ -9,11 +9,6 @@ from .pet_service import PetService
 
 
 class PetModule(IModule):
-    container: Container
-
-    def __init__(self) -> None:
-        self.container = Container()
-
     def resolve(self, container: Container) -> None:
         logging_service = container.resolve(LoggingService)
         data_service = container.resolve(DataService)

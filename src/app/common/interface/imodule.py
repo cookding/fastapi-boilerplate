@@ -4,9 +4,14 @@ from punq import Container
 
 
 class IModule(ABC):
-    @abstractmethod
+    _container: Container
+
     def __init__(self) -> None:
-        pass
+        self._container = Container()
+
+    @property
+    def container(self) -> Container:
+        return self._container
 
     @abstractmethod
     def resolve(self, container: Container) -> None:

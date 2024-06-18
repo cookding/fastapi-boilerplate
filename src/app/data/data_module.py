@@ -5,11 +5,6 @@ from .data_service import DataService
 
 
 class DataModule(IModule):
-    container: Container
-
-    def __init__(self) -> None:
-        self.container = Container()
-
     def resolve(self, container: Container) -> None:
         data_service = DataService()
         self.container.register(

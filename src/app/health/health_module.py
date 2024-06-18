@@ -7,11 +7,6 @@ from .health_controller import HealthController
 
 
 class HealthModule(IModule):
-    container: Container
-
-    def __init__(self) -> None:
-        self.container = Container()
-
     def resolve(self, container: Container) -> None:
         data_service: DataService = container.resolve(DataService)
         health_controller = HealthController(

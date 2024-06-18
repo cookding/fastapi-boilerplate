@@ -10,11 +10,6 @@ from .middleware.log_access_middleware import LogAccessMiddleware
 
 
 class CommonModule(IModule):
-    container: Container
-
-    def __init__(self) -> None:
-        self.container = Container()
-
     def resolve(self, container: Container) -> None:
         config_service: ConfigService = container.resolve(ConfigService)
         logging_service: LoggingService = container.resolve(LoggingService)

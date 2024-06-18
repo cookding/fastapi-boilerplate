@@ -5,11 +5,6 @@ from .config_service import ConfigService
 
 
 class ConfigModule(IModule):
-    container: Container
-
-    def __init__(self) -> None:
-        self.container = Container()
-
     def resolve(self, container: Container) -> None:
         config_service = ConfigService()
         self.container.register(
