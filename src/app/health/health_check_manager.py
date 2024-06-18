@@ -35,10 +35,10 @@ class HealthCheckResponse(TypedDict):
 
 
 class HealthCheckManager:
-    checkers: list[HealthChecker]
+    _checkers: list[HealthChecker]
 
     def __init__(self) -> None:
-        self.checkers = []
+        self._checkers = []
 
     def add_checker(
         self,
@@ -46,7 +46,7 @@ class HealthCheckManager:
         name: str,
         failure_status: ResultStatus,
     ) -> None:
-        self.checkers.append(
+        self._checkers.append(
             {
                 "check": check,
                 "name": name,
@@ -57,7 +57,7 @@ class HealthCheckManager:
     async def get_status(self) -> HealthCheckResponse:
         status: ResultStatus = HEALTHY
         results: list[HealthCheckResult] = []
-        for checker in self.checkers:
+        for checker in self._checkers:
             try:
                 await checker["check"]()
                 results.append(

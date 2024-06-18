@@ -10,29 +10,29 @@ from .pet_service import PetService
 
 
 class PetController(IController):
-    logger: Logger
-    pet_service: PetService
+    _logger: Logger
+    _pet_service: PetService
 
     def __init__(
         self,
         logging_service: LoggingService,
         pet_service: PetService,
     ) -> None:
-        self.logger = logging_service.get_logger(__name__)
-        self.pet_service = pet_service
+        self._logger = logging_service.get_logger(__name__)
+        self._pet_service = pet_service
 
     def register_routers(self, router: APIRouter) -> None:
         @router.post("/api/pets")
         async def create(body: CreatePetDto = Body()) -> ResponseDataDto[Pet]:
-            pet = await self.pet_service.create(PetCreateInput(name=body.name))
+            pet = await self._pet_service.create(PetCreateInput(name=body.name))
             return {
                 "data": pet,
             }
 
         @router.get("/api/pets")
         async def query(skip: int = 0, take: int = 20) -> QueryResponseDto[Pet]:
-            count = await self.pet_service.count()
-            pets = await self.pet_service.query(skip=skip, take=take)
+            count = await self._pet_service.count()
+            pets = await self._pet_service.query(skip=skip, take=take)
             return {
                 "meta": {"total": count},
                 "data": pets,
@@ -40,7 +40,7 @@ class PetController(IController):
 
         @router.delete("/api/pets/{id}")
         async def delete(id: str) -> ResponseDataDto[None]:
-            await self.pet_service.delete(id)
+            await self._pet_service.delete(id)
             return {
                 "data": None,
             }

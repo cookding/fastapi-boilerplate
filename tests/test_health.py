@@ -26,12 +26,12 @@ async def test_degraded(app: FastAPI, client: AsyncClient):
     health_controller: HealthController = health_module.container.resolve(
         HealthController
     )
-    health_checker_manager = health_controller.health_check_manager
+    health_checker_manager = health_controller._health_check_manager
 
     async def check_error():
         raise Exception("Docker service is unavailable")
 
-    health_checker_manager.checkers.append(
+    health_checker_manager._checkers.append(
         {
             "check": check_error,
             "name": "docker",
@@ -61,14 +61,14 @@ async def test_unhealthy(app: FastAPI, client: AsyncClient):
     health_controller: HealthController = health_module.container.resolve(
         HealthController
     )
-    health_checker_manager = health_controller.health_check_manager
+    health_checker_manager = health_controller._health_check_manager
 
     async def check_error():
         raise Exception(
             "Can't reach database server at `localhost`:`5432`\n\nPlease make sure your database server is running at `localhost`:`5432`."
         )
 
-    health_checker_manager.checkers[0]["check"] = check_error
+    health_checker_manager._checkers[0]["check"] = check_error
 
     res: Response = await client.get("/health")
 

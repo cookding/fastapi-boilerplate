@@ -34,7 +34,7 @@ class InterceptHandler(logging.Handler):
 
 
 class LoggingService:
-    handlers: list[dict[str, Any]]
+    _handlers: list[dict[str, Any]]
     _logger: loguru.Logger
 
     def __init__(self, log_format: str, log_level: str) -> None:
@@ -64,7 +64,7 @@ class LoggingService:
         _logger.configure(handlers=handlers)
 
         self._logger = _logger
-        self.handlers = handlers
+        self._handlers = handlers
 
     def reset_logger(self, logger_names: list[str]) -> None:
         logging.getLogger().handlers = [InterceptHandler()]
@@ -72,7 +72,7 @@ class LoggingService:
             logging_logger = logging.getLogger(logger_name)
             logging_logger.handlers = [InterceptHandler()]
             logging_logger.propagate = False
-        self._logger.configure(handlers=self.handlers)
+        self._logger.configure(handlers=self._handlers)
 
     def disable_logger(self, logger_names: list[str]) -> None:
         for logger_name in logger_names:

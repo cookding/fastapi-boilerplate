@@ -9,7 +9,7 @@ from .health_check_manager import UNHEALTHY, HealthCheckManager
 
 
 class HealthController(IController):
-    health_check_manager: HealthCheckManager
+    _health_check_manager: HealthCheckManager
 
     def __init__(self, data_service: DataService) -> None:
         health_check_manager = HealthCheckManager()
@@ -24,12 +24,12 @@ class HealthController(IController):
             failure_status=UNHEALTHY,
         )
 
-        self.health_check_manager = health_check_manager
+        self._health_check_manager = health_check_manager
 
     def register_routers(self, router: APIRouter) -> None:
         @router.get("/health")
         async def health(response: Response) -> Any:
-            result = await self.health_check_manager.get_status()
+            result = await self._health_check_manager.get_status()
             return JSONResponse(
                 status_code=(
                     status.HTTP_200_OK
