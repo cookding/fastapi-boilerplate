@@ -11,14 +11,16 @@ build_job:
     - name: postgres:16.3
       alias: postgres
   variables:
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: password
-    POSTGRES_DB: fastapi_boilerplate
-    PDM_CHECK_UPDATE: false
-    APP_NAME: fastapi-boilerplate
-    APP_HOST: 127.0.0.1
-    APP_PORT: 4000
-    DATABASE_URL: postgresql://postgres:password@postgres:5432/fastapi_boilerplate?schema=public
+    POSTGRES_USER: "postgres"
+    POSTGRES_PASSWORD: "password"
+    POSTGRES_DB: "fastapi_boilerplate"
+    PIP_ONLY_BINARY: ":all:"
+    PDM_ONLY_BINARY: ":all:"
+    PDM_CHECK_UPDATE: "false"
+    APP_NAME: "fastapi-boilerplate"
+    APP_HOST: "127.0.0.1"
+    APP_PORT: "4000"
+    DATABASE_URL: "postgresql://postgres:password@postgres:5432/fastapi_boilerplate?schema=public"
   script:
     - |
       set -eux; \

@@ -17,6 +17,7 @@ RUN set -eux; \
 WORKDIR /app
 
 ARG PIP_INDEX_URL=https://pypi.org/simple
+ENV PIP_ONLY_BINARY=:all:
 RUN pip install --index-url ${PIP_INDEX_URL} pdm
 
 COPY pyproject.toml pdm.lock README.md /app/
@@ -24,6 +25,7 @@ COPY pyproject.toml pdm.lock README.md /app/
 ARG PDM_PYPI_URL=https://pypi.org/simple
 ARG PDM_PYPI_USERNAME=
 ARG PDM_PYPI_PASSWORD=
+ENV PDM_ONLY_BINARY=:all:
 ENV PDM_CHECK_UPDATE=false
 RUN python -m venv .venv && \
     pdm install --check --prod --no-editable
