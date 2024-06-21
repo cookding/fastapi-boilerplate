@@ -38,6 +38,7 @@ test.cmd = "pytest -r A"
 test.env = { LOG_LEVEL = "error" }
 test-cov.cmd = "pytest --cov-config=.coveragerc --verbosity=3 --cov=src/app --cov-branch --cov-report term-missing tests/"
 test-cov.env = { LOG_LEVEL = "error" }
+license-check = "licensecheck --zero"
 
 [tool.pdm.dev-dependencies]
 dev = [
@@ -47,6 +48,7 @@ dev = [
     "ruff>=0.4.9",
     "mypy>=1.10.0",
     "anyio>=4.4.0",
+    "licensecheck>=2024.2",
 ]
 
 [tool.prisma]
@@ -113,3 +115,6 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "@abstractmethod",
 ]
+
+[tool.licensecheck]
+using = "PEP631"

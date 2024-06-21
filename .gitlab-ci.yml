@@ -40,6 +40,7 @@ build_job:
     - pdm run migrate-deploy
     - pdm run lint
     - pdm run test-cov
+    - pdm run license-check
 
 release_job:
   image: docker:24
