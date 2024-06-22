@@ -3,9 +3,9 @@ from typing import Awaitable, Callable
 
 from fastapi import Request, Response
 
+from ...common.interface.ihttp_middleware import IHttpMiddleware
 from ...logging.logger import Logger
 from ...logging.logging_service import LoggingService
-from ..interface.ihttp_middleware import IHttpMiddleware
 
 
 class LogAccessMiddleware(IHttpMiddleware):

@@ -1,15 +1,15 @@
 from punq import Container, Scope
 
+from ..common.interface.iexception_handler import IExceptionHandler
+from ..common.interface.ihttp_middleware import IHttpMiddleware
+from ..common.interface.imodule import IModule
 from ..config.config_service import ConfigService
 from ..logging.logging_service import LoggingService
 from .exception_handler.validation_exception_handler import ValidationExceptionHandler
-from .interface.iexception_handler import IExceptionHandler
-from .interface.ihttp_middleware import IHttpMiddleware
-from .interface.imodule import IModule
 from .middleware.log_access_middleware import LogAccessMiddleware
 
 
-class CommonModule(IModule):
+class GeneralModule(IModule):
     def resolve(self, container: Container) -> None:
         config_service: ConfigService = container.resolve(ConfigService)
         logging_service: LoggingService = container.resolve(LoggingService)

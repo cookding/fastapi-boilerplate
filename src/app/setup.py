@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from punq import Container, Scope
 
-from .common.common_module import CommonModule
 from .common.interface.icontroller import IController
 from .common.interface.iexception_handler import IExceptionHandler
 from .common.interface.ihttp_middleware import IHttpMiddleware
@@ -13,6 +12,7 @@ from .common.interface.imodule import IModule
 from .config.config_module import ConfigModule
 from .data.data_module import DataModule
 from .data.data_service import DataService
+from .general.general_module import GeneralModule
 from .health.health_module import HealthModule
 from .logging.logger import Logger
 from .logging.logging_module import LoggingModule
@@ -43,7 +43,7 @@ def setup(app: FastAPI) -> None:
         ConfigModule(),
         LoggingModule(),
         DataModule(),
-        CommonModule(),
+        GeneralModule(),
         HealthModule(),
         PetModule(),
     ]
