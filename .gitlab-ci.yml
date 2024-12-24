@@ -3,7 +3,7 @@ stages:
   - release
 
 build_job:
-  image: python:3.11-slim
+  image: python:3.12-slim
   stage: build
   only:
     - main

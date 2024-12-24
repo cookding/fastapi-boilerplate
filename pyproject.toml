@@ -8,9 +8,8 @@ dependencies = [
     "punq>=0.7.0",
     "loguru>=0.7.3",
     "prisma>=0.15.0",
-    "typing-extensions>=4.12.2",
 ]
-requires-python = "==3.11.*"
+requires-python = "==3.12.*"
 readme = "README.md"
 license = { text = "MIT" }
 
@@ -74,7 +73,7 @@ check_untyped_defs = true
 line-length = 88
 indent-width = 4
 exclude = ["tests/fixtures"]
-target-version = "py311"
+target-version = "py312"
 src = ["src"]
 
 [tool.ruff.lint]

@@ -1,9 +1,6 @@
-from typing import Generic, TypeVar
+from typing import Generic, TypedDict, TypeVar
 
 from pydantic import BaseModel, Field
-from typing_extensions import (
-    TypedDict,  # TODO: import from `typing` after upgraded to python >= 3.12
-)
 
 
 class CreatePetDto(BaseModel):

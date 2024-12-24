@@ -1,6 +1,6 @@
 ARG DOCKERHUB_REGISTRY=docker.io
 ARG APT_DEBIAN_MIRROR_HOST=
-FROM ${DOCKERHUB_REGISTRY}/library/python:3.11-slim AS builder
+FROM ${DOCKERHUB_REGISTRY}/library/python:3.12-slim AS builder
 ARG APT_DEBIAN_MIRROR_HOST
 
 RUN if [ "${APT_DEBIAN_MIRROR_HOST}" != "" ]; then sed -i "s/deb.debian.org/${APT_DEBIAN_MIRROR_HOST}/g" /etc/apt/sources.list.d/debian.sources; fi
@@ -42,7 +42,7 @@ RUN prisma version # trigger prisma cli installation
 COPY prisma /app/prisma
 RUN prisma generate
 
-FROM ${DOCKERHUB_REGISTRY}/library/python:3.11-slim as runner
+FROM ${DOCKERHUB_REGISTRY}/library/python:3.12-slim as runner
 ARG DOCKERHUB_REGISTRY=docker.io
 ARG APT_DEBIAN_MIRROR_HOST
 

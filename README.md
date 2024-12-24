@@ -4,7 +4,7 @@ A template for building server-side applications with FastAPI.
 
 ## Development environment
 
-* Python 3.11: to run the app
+* Python 3.12: to run the app
 * PDM: the package and dependency manager
 * Node.js 22: required by `prisma`
 * Docker: to run database setup scripts
