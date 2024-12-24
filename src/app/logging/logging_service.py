@@ -5,7 +5,7 @@ import logging
 import os
 import sys
 from types import FrameType
-from typing import Any, cast
+from typing import cast
 
 import loguru
 from loguru import logger as _logger
@@ -34,7 +34,7 @@ class InterceptHandler(logging.Handler):
 
 
 class LoggingService:
-    _handlers: list[dict[str, Any]]
+    _handlers: list[loguru.HandlerConfig]
     _logger: loguru.Logger
 
     def __init__(self, log_format: str, log_level: str) -> None:
@@ -54,7 +54,7 @@ class LoggingService:
             else:
                 print(f"{record['level'].name}: {record['message']}", file=sys.stdout)
 
-        handlers = [
+        handlers: list[loguru.HandlerConfig] = [
             {
                 "sink": sink,
                 "level": log_level.upper(),

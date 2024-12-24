@@ -1,6 +1,6 @@
 import pytest
 from asgi_lifespan import LifespanManager
-from httpx import AsyncClient
+from httpx import ASGITransport, AsyncClient
 
 from app.main import app as main_app
 
@@ -20,7 +20,9 @@ async def app():
 @pytest.fixture
 async def client(app):
     async with LifespanManager(app) as manager:
-        async with AsyncClient(app=manager.app, base_url="http://localhost") as c:
+        async with AsyncClient(
+            transport=ASGITransport(app=manager.app), base_url="http://localhost"
+        ) as c:
             yield c
 
 

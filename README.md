@@ -6,7 +6,7 @@ A template for building server-side applications with FastAPI.
 
 * Python 3.11: to run the app
 * PDM: the package and dependency manager
-* Node.js: required by `prisma`
+* Node.js 22: required by `prisma`
 * Docker: to run database setup scripts
 * bash: to run some scripts
 
