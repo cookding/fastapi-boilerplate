@@ -5,19 +5,19 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from punq import Container, Scope
 
-from .common.interface.icontroller import IController
-from .common.interface.iexception_handler import IExceptionHandler
-from .common.interface.ihttp_middleware import IHttpMiddleware
-from .common.interface.imodule import IModule
-from .config.config_module import ConfigModule
-from .data.data_module import DataModule
-from .data.data_service import DataService
-from .general.general_module import GeneralModule
-from .health.health_module import HealthModule
-from .logging.logger import Logger
-from .logging.logging_module import LoggingModule
-from .logging.logging_service import LoggingService
-from .pet.pet_module import PetModule
+from app.common.interface.icontroller import IController
+from app.common.interface.iexception_handler import IExceptionHandler
+from app.common.interface.ihttp_middleware import IHttpMiddleware
+from app.common.interface.imodule import IModule
+from app.config.config_module import ConfigModule
+from app.data.data_module import DataModule
+from app.data.data_service import DataService
+from app.general.general_module import GeneralModule
+from app.health.health_module import HealthModule
+from app.logging.logger import Logger
+from app.logging.logging_module import LoggingModule
+from app.logging.logging_service import LoggingService
+from app.pet.pet_module import PetModule
 
 
 @asynccontextmanager

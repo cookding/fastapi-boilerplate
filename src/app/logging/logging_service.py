@@ -10,7 +10,7 @@ from typing import cast
 import loguru
 from loguru import logger as _logger
 
-from .logger import Logger
+from app.logging.logger import Logger
 
 
 class InterceptHandler(logging.Handler):

@@ -3,8 +3,7 @@ from asgi_lifespan import LifespanManager
 from httpx import ASGITransport, AsyncClient
 
 from app.main import app as main_app
-
-from .app_manager import AppManager
+from tests.app_manager import AppManager
 
 
 @pytest.fixture

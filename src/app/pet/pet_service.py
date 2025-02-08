@@ -2,9 +2,9 @@ from prisma.actions import PetActions
 from prisma.models import Pet
 from prisma.types import PetCreateInput, PetWhereUniqueInput
 
-from ..data.data_service import DataService
-from ..logging.logger import Logger
-from ..logging.logging_service import LoggingService
+from app.data.data_service import DataService
+from app.logging.logger import Logger
+from app.logging.logging_service import LoggingService
 
 
 class PetService:

@@ -2,11 +2,11 @@ from fastapi import APIRouter, Body
 from prisma.models import Pet
 from prisma.types import PetCreateInput
 
-from ..common.interface.icontroller import IController
-from ..logging.logger import Logger
-from ..logging.logging_service import LoggingService
-from .pet_entity import CreatePetDto, QueryResponseDto, ResponseDataDto
-from .pet_service import PetService
+from app.common.interface.icontroller import IController
+from app.logging.logger import Logger
+from app.logging.logging_service import LoggingService
+from app.pet.pet_entity import CreatePetDto, QueryResponseDto, ResponseDataDto
+from app.pet.pet_service import PetService
 
 
 class PetController(IController):

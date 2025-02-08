@@ -1,10 +1,10 @@
 from punq import Container, Scope
 
-from ..common.interface.icontroller import IController
-from ..common.interface.imodule import IModule
-from ..data.data_service import DataService
-from .health_check_manager import UNHEALTHY, HealthCheckManager
-from .health_controller import HealthController
+from app.common.interface.icontroller import IController
+from app.common.interface.imodule import IModule
+from app.data.data_service import DataService
+from app.health.health_check_manager import UNHEALTHY, HealthCheckManager
+from app.health.health_controller import HealthController
 
 
 class HealthModule(IModule):

@@ -1,6 +1,6 @@
 import os
 
-from .config_entity import Config
+from app.config.config_entity import Config
 
 
 class ConfigService:

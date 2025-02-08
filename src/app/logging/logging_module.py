@@ -1,8 +1,8 @@
 from punq import Container, Scope
 
-from ..common.interface.imodule import IModule
-from ..config.config_service import ConfigService
-from .logging_service import LoggingService
+from app.common.interface.imodule import IModule
+from app.config.config_service import ConfigService
+from app.logging.logging_service import LoggingService
 
 
 class LoggingModule(IModule):

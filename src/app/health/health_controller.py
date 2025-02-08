@@ -3,8 +3,8 @@ from typing import Any
 from fastapi import APIRouter, Response, status
 from fastapi.responses import JSONResponse
 
-from ..common.interface.icontroller import IController
-from .health_check_manager import UNHEALTHY, HealthCheckManager
+from app.common.interface.icontroller import IController
+from app.health.health_check_manager import UNHEALTHY, HealthCheckManager
 
 
 class HealthController(IController):

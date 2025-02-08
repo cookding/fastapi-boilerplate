@@ -4,7 +4,7 @@ import pytest
 from fastapi import FastAPI, Response
 from httpx import AsyncClient
 
-from .app_manager import AppManager
+from tests.app_manager import AppManager
 
 
 @pytest.mark.anyio

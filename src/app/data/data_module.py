@@ -1,7 +1,7 @@
 from punq import Container, Scope
 
-from ..common.interface.imodule import IModule
-from .data_service import DataService
+from app.common.interface.imodule import IModule
+from app.data.data_service import DataService
 
 
 class DataModule(IModule):

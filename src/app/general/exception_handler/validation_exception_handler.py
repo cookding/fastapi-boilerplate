@@ -3,8 +3,8 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from ...common.errors import VALIDATION_ERROR
-from ...common.interface.iexception_handler import IExceptionHandler
+from app.common.errors import VALIDATION_ERROR
+from app.common.interface.iexception_handler import IExceptionHandler
 
 
 class ValidationExceptionHandler(IExceptionHandler[RequestValidationError]):

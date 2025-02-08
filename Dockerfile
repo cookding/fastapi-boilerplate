@@ -66,5 +66,6 @@ COPY src /app/src
 ENV PYTHONUNBUFFERED=1
 ENV PATH=/app/.venv/bin:${PATH}
 ENV PRISMA_BINARY_CACHE_DIR=/app/.venv/prisma-binaries
+ENV PYTHONPATH=/app/src
 
 CMD ["python", "-m", "src.app.main"]

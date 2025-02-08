@@ -1,11 +1,11 @@
 from punq import Container, Scope
 
-from ..common.interface.icontroller import IController
-from ..common.interface.imodule import IModule
-from ..data.data_service import DataService
-from ..logging.logging_service import LoggingService
-from .pet_controller import PetController
-from .pet_service import PetService
+from app.common.interface.icontroller import IController
+from app.common.interface.imodule import IModule
+from app.data.data_service import DataService
+from app.logging.logging_service import LoggingService
+from app.pet.pet_controller import PetController
+from app.pet.pet_service import PetService
 
 
 class PetModule(IModule):

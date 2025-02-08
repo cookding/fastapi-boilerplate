@@ -1,12 +1,14 @@
 from punq import Container, Scope
 
-from ..common.interface.iexception_handler import IExceptionHandler
-from ..common.interface.ihttp_middleware import IHttpMiddleware
-from ..common.interface.imodule import IModule
-from ..config.config_service import ConfigService
-from ..logging.logging_service import LoggingService
-from .exception_handler.validation_exception_handler import ValidationExceptionHandler
-from .middleware.log_access_middleware import LogAccessMiddleware
+from app.common.interface.iexception_handler import IExceptionHandler
+from app.common.interface.ihttp_middleware import IHttpMiddleware
+from app.common.interface.imodule import IModule
+from app.config.config_service import ConfigService
+from app.general.exception_handler.validation_exception_handler import (
+    ValidationExceptionHandler,
+)
+from app.general.middleware.log_access_middleware import LogAccessMiddleware
+from app.logging.logging_service import LoggingService
 
 
 class GeneralModule(IModule):

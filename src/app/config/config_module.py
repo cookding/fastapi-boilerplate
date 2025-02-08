@@ -1,7 +1,7 @@
 from punq import Container, Scope
 
-from ..common.interface.imodule import IModule
-from .config_service import ConfigService
+from app.common.interface.imodule import IModule
+from app.config.config_service import ConfigService
 
 
 class ConfigModule(IModule):
