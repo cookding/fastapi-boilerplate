@@ -8,3 +8,6 @@ class Config:
     log_format: str
     log_level: str
     log_access_excludes: list[str]
+    sentry_dsn: str
+    sentry_environment: str
+    sentry_send_default_pii: bool

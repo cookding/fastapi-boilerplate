@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator
 
+import sentry_sdk
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from punq import Container, Scope
@@ -10,6 +11,7 @@ from app.common.interface.iexception_handler import IExceptionHandler
 from app.common.interface.ihttp_middleware import IHttpMiddleware
 from app.common.interface.imodule import IModule
 from app.config.config_module import ConfigModule
+from app.config.config_service import ConfigService
 from app.data.data_module import DataModule
 from app.data.data_service import DataService
 from app.general.general_module import GeneralModule
@@ -34,7 +36,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info("Disconnected database")
 
 
-def setup(app: FastAPI) -> None:
+def setup() -> FastAPI:
     load_dotenv()
 
     container = Container()
@@ -56,6 +58,21 @@ def setup(app: FastAPI) -> None:
         module.resolve(container)
         module.register_exports(container)
 
+    config_service: ConfigService = container.resolve(ConfigService)
+    logging_service: LoggingService = container.resolve(LoggingService)
+    logger = logging_service.get_logger(__name__)
+    if config_service.config.sentry_dsn:
+        logger.info("Sentry DSN is provided")
+        sentry_sdk.init(
+            dsn=config_service.config.sentry_dsn,
+            environment=config_service.config.sentry_environment,
+            send_default_pii=config_service.config.sentry_send_default_pii,
+        )
+    else:
+        logger.info("Sentry DSN is not provided")
+
+    app = FastAPI(openapi_url=None, lifespan=lifespan)
+
     app.state.container = container
 
     app.router.get("/")(lambda: {})  # pragma: no cover
@@ -74,3 +91,5 @@ def setup(app: FastAPI) -> None:
     http_middlewares: list[IHttpMiddleware] = container.resolve_all(IHttpMiddleware)
     for http_middleware in http_middlewares:
         app.middleware("http")(http_middleware.dispatch)
+
+    return app

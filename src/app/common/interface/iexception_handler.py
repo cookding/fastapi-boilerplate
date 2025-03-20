@@ -8,7 +8,7 @@ T = TypeVar("T")
 
 class IExceptionHandler(ABC, Generic[T]):
     @abstractmethod
-    def get_handle_class(self) -> type[Exception]:
+    def get_handle_class(self) -> type[T]:
         pass
 
     @abstractmethod

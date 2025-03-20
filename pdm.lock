@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:19b66f3cd095522fae5303222ad871b4c89e90aa334980cf67c24254ddc1c90d"
+content_hash = "sha256:80bd52884035c88cd06297f9db43cbac0351d7a7a60d6eb4d3ad69a22fb6c9e2"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -808,6 +808,35 @@ files = [
 ]
 
 [[package]]
+name = "sentry-sdk"
+version = "2.23.1"
+requires_python = ">=3.6"
+summary = "Python client for Sentry (https://sentry.io)"
+groups = ["default"]
+dependencies = [
+    "certifi",
+    "urllib3>=1.26.11",
+]
+files = [
+    {file = "sentry_sdk-2.23.1-py2.py3-none-any.whl", hash = "sha256:42ef3a6cc1db3d22cb2ab24163d75b23f291ad9892b1a8c44075ce809a32b191"},
+]
+
+[[package]]
+name = "sentry-sdk"
+version = "2.23.1"
+extras = ["fastapi"]
+requires_python = ">=3.6"
+summary = "Python client for Sentry (https://sentry.io)"
+groups = ["default"]
+dependencies = [
+    "fastapi>=0.79.0",
+    "sentry-sdk==2.23.1",
+]
+files = [
+    {file = "sentry_sdk-2.23.1-py2.py3-none-any.whl", hash = "sha256:42ef3a6cc1db3d22cb2ab24163d75b23f291ad9892b1a8c44075ce809a32b191"},
+]
+
+[[package]]
 name = "shellingham"
 version = "1.5.4"
 requires_python = ">=3.7"
@@ -935,7 +964,7 @@ name = "urllib3"
 version = "2.3.0"
 requires_python = ">=3.9"
 summary = "HTTP library with thread-safe connection pooling, file post, and more."
-groups = ["dev"]
+groups = ["default", "dev"]
 files = [
     {file = "urllib3-2.3.0-py3-none-any.whl", hash = "sha256:1cee9ad369867bfdbbb48b7dd50374c0967a0bb7710050facf0dd6911440e3df"},
 ]

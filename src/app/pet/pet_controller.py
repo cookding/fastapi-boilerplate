@@ -44,3 +44,7 @@ class PetController(IController):
             return {
                 "data": None,
             }
+
+        @router.put("/api/pets/{id}")
+        async def update(id: str) -> None:
+            raise NotImplementedError("update pet is not implemented", {"id": id})

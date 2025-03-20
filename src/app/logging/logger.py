@@ -11,6 +11,9 @@ class Logger:
     def __init__(self, logger: loguru.Logger) -> None:
         self._logger = logger
 
+    def opt(self, exception: Exception | None) -> Logger:
+        return Logger(self._logger.opt(exception=exception))
+
     def trace(self, msg: str, *args: tuple[Any], **kwargs: dict[str, Any]) -> None:
         self._logger.trace(msg, *args, **kwargs)
 

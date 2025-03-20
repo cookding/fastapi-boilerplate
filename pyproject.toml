@@ -2,12 +2,13 @@
 name = "fastapi-boilerplate"
 version = "0.1.0"
 description = "FastAPI Boilerplate"
-authors = [{ name = "Wang, Tao", email = "wangtao@cookding.com" }]
+authors = [{ name = "Cook Ding Developers", email = "developer@cookding.com" }]
 dependencies = [
     "fastapi[standard]>=0.115.6",
     "punq>=0.7.0",
     "loguru>=0.7.3",
     "prisma>=0.15.0",
+    "sentry-sdk[fastapi]>=2.23.1",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"

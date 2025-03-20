@@ -1,13 +1,11 @@
-from fastapi import FastAPI
 from uvicorn import Config, Server
 
 from app.config.config_service import ConfigService
 from app.logging.logger import Logger
 from app.logging.logging_service import LoggingService
-from app.setup import lifespan, setup
+from app.setup import setup
 
-app = FastAPI(openapi_url=None, lifespan=lifespan)
-setup(app)
+app = setup()
 
 if __name__ == "__main__":
     config_service: ConfigService = app.state.container.resolve(ConfigService)
