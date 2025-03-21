@@ -20,7 +20,8 @@ async def app():
 async def client(app):
     async with LifespanManager(app) as manager:
         async with AsyncClient(
-            transport=ASGITransport(app=manager.app), base_url="http://localhost"
+            transport=ASGITransport(app=manager.app, raise_app_exceptions=False),
+            base_url="http://localhost",
         ) as c:
             yield c
 

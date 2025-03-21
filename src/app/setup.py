@@ -75,7 +75,6 @@ def setup_sentry(container: Container) -> None:
 def setup_app(app: FastAPI) -> None:
     container: Container = app.state.container
 
-    app.router.get("/")(lambda: {})  # pragma: no cover
     controllers: list[IController] = container.resolve_all(IController)
     for controller in controllers:
         controller.register_routers(app.router)

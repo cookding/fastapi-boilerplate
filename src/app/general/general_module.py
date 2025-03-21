@@ -1,5 +1,6 @@
 from punq import Container, Scope
 
+from app.common.interface.icontroller import IController
 from app.common.interface.iexception_handler import IExceptionHandler
 from app.common.interface.ihttp_middleware import IHttpMiddleware
 from app.common.interface.imodule import IModule
@@ -9,6 +10,8 @@ from app.general.exception_handler.exception_handlers import (
     UnknownExceptionHandler,
     ValidationExceptionHandler,
 )
+from app.general.general_controller import GeneralController
+from app.general.general_service import GeneralService
 from app.general.middleware.log_access_middleware import LogAccessMiddleware
 from app.logging.logging_service import LoggingService
 
@@ -17,6 +20,26 @@ class GeneralModule(IModule):
     def resolve(self, container: Container) -> None:
         config_service: ConfigService = container.resolve(ConfigService)
         logging_service: LoggingService = container.resolve(LoggingService)
+
+        general_service = GeneralService(
+            logging_service=logging_service,
+        )
+        self.container.register(
+            GeneralService,
+            instance=general_service,
+            scope=Scope.singleton,
+        )
+
+        general_controller = GeneralController(
+            logging_service=logging_service,
+            general_service=general_service,
+        )
+        self.container.register(
+            GeneralController,
+            instance=general_controller,
+            scope=Scope.singleton,
+        )
+
         logging_middleware = LogAccessMiddleware(
             excludes=config_service.config.log_access_excludes,
             logging_service=logging_service,
@@ -49,6 +72,13 @@ class GeneralModule(IModule):
         )
 
     def register_exports(self, container: Container) -> None:
+        general_controller = self.container.resolve(GeneralController)
+        container.register(
+            IController,
+            instance=general_controller,
+            scope=Scope.singleton,
+        )
+
         logging_middleware = self.container.resolve(LogAccessMiddleware)
         container.register(
             IHttpMiddleware,
