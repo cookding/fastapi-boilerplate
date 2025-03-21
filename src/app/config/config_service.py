@@ -21,6 +21,9 @@ class ConfigService:
                 "SENTRY_SEND_DEFAULT_PII", "false"
             ).lower()
             == "true",
+            sentry_traces_sample_rate=float(
+                os.getenv("SENTRY_TRACES_SAMPLE_RATE", "0.0")
+            ),
         )
 
     @property
