@@ -89,6 +89,9 @@ select = [
     "TID", # flake8-tidy-imports
     "W",   # pycodestyle
     "YTT", # flake8-2020
+    "FAST001", # fast-api-redundant-response-model
+    "FAST002", # fast-api-non-annotated-dependency
+    "FAST003", # fast-api-unused-path-parameter
 ]
 ignore = [
     "B008",   # function-call-in-default-argument

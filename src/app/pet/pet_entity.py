@@ -1,23 +1,26 @@
-from typing import Generic, TypedDict, TypeVar
+from typing import Annotated
 
+from prisma.models import Pet
 from pydantic import BaseModel, Field
+
+from app.general.general_entity import (
+    PaginationQueryParams,
+    QueryResponseDto,
+    ResponseDataDto,
+)
 
 
 class CreatePetDto(BaseModel):
-    name: str = Field(max_length=20)
+    name: Annotated[str, Field(..., max_length=20)]
 
 
-T = TypeVar("T")
+class PetQueryParams(BaseModel):
+    pagination: Annotated[PaginationQueryParams, Field(default=PaginationQueryParams())]
 
 
-class ResponseDataDto(TypedDict, Generic[T]):
-    data: T
+class PetsQueryResponseDto(QueryResponseDto[Pet]):
+    pass
 
 
-class QueryResponseMetaDto(TypedDict):
-    total: int
-
-
-class QueryResponseDto(TypedDict, Generic[T]):
-    meta: QueryResponseMetaDto
-    data: list[T]
+class PetResponseDataDto(ResponseDataDto[Pet | None]):
+    pass
