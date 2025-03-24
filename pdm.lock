@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:c6b747bed85edc6a3bee04283039bbc17d297f12e8b44117f1c47868f6aca277"
+content_hash = "sha256:1e424646201cfee15832ebca7fedc2d084d96d7097addeb33031fea59da780a0"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -72,15 +72,6 @@ dependencies = [
 ]
 files = [
     {file = "attrs-23.2.0-py3-none-any.whl", hash = "sha256:99b87a485a5820b23b879f04c2305b44b951b502fd64be915879d77a7e8fc6f1"},
-]
-
-[[package]]
-name = "boolean-py"
-version = "4.0"
-summary = "Define boolean algebras, create and parse boolean expressions and create custom boolean DSL."
-groups = ["dev"]
-files = [
-    {file = "boolean.py-4.0-py3-none-any.whl", hash = "sha256:2876f2051d7d6394a531d82dc6eb407faa0b01a0a0b3083817ccd7323b8d96bd"},
 ]
 
 [[package]]
@@ -397,40 +388,26 @@ files = [
 ]
 
 [[package]]
-name = "license-expression"
-version = "30.4.1"
-requires_python = ">=3.9"
-summary = "license-expression is a comprehensive utility library to parse, compare, simplify and normalize license expressions (such as SPDX license expressions) using boolean logic."
-groups = ["dev"]
-dependencies = [
-    "boolean-py>=4.0",
-]
-files = [
-    {file = "license_expression-30.4.1-py3-none-any.whl", hash = "sha256:679646bc3261a17690494a3e1cada446e5ee342dbd87dcfa4a0c24cc5dce13ee"},
-]
-
-[[package]]
 name = "licensecheck"
-version = "2025.0.1"
-requires_python = ">=3.9"
+version = "2024.3"
+requires_python = "<4.0,>=3.8"
 summary = "Output the licenses used by dependencies and check if these are compatible with the project license"
 groups = ["dev"]
 dependencies = [
-    "appdirs>=1.4.4",
-    "fhconfparser>=2024.1",
-    "license-expression>=30.4.1",
-    "loguru>=0.7.3",
-    "markdown>=3.7",
-    "packaging>=24.2",
-    "requests-cache>=1.2.1",
-    "requests>=2.32.3",
-    "requirements-parser>=0.11.0",
-    "rich>=13.9.4",
-    "tomli>=2.2.1",
-    "uv>=0.6.6",
+    "appdirs<2,>=1.4.4",
+    "fhconfparser<2026,>=2024.1",
+    "loguru<2,>=0.7.2",
+    "markdown<4,>=3.6",
+    "packaging<25,>=24.0",
+    "requests-cache<2,>=1.2.0",
+    "requests<3,>=2.31.0",
+    "requirements-parser<2,>=0.11.0",
+    "rich<14,>=13.7.1",
+    "tomli<3,>=2.0.1",
+    "uv<2,>=0.3.3",
 ]
 files = [
-    {file = "licensecheck-2025.0.1-py3-none-any.whl", hash = "sha256:82532c18ef0a511af3f94d07de4bbd08a276dea15651a1207552c3d67ce99dc9"},
+    {file = "licensecheck-2024.3-py3-none-any.whl", hash = "sha256:0baef4c1865e0325a35ff25ed12a0c7094035b7dcfbab9a1abfe43d7735adebe"},
 ]
 
 [[package]]

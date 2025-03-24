@@ -50,7 +50,7 @@ dev = [
     "ruff>=0.11.2",
     "mypy>=1.15.0",
     "anyio>=4.9.0",
-    "licensecheck>=2025.0.1",
+    "licensecheck==2024.3",
 ]
 
 [tool.prisma]
@@ -127,3 +127,4 @@ exclude_lines = [
 
 [tool.licensecheck]
 using = "PEP631"
+format = "simple"
