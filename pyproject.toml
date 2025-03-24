@@ -4,11 +4,11 @@ version = "0.1.0"
 description = "FastAPI Boilerplate"
 authors = [{ name = "Cook Ding Developers", email = "developer@cookding.com" }]
 dependencies = [
-    "fastapi[standard]>=0.115.6",
+    "fastapi[standard]>=0.115.11",
     "punq>=0.7.0",
     "loguru>=0.7.3",
     "prisma>=0.15.0",
-    "sentry-sdk[fastapi]>=2.23.1",
+    "sentry-sdk[fastapi]>=2.24.0",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"
@@ -45,12 +45,12 @@ license-check = "licensecheck --zero"
 [tool.pdm.dev-dependencies]
 dev = [
     "asgi-lifespan>=2.1.0",
-    "pytest>=8.3.4",
+    "pytest>=8.3.5",
     "pytest-cov>=6.0.0",
-    "ruff>=0.8.4",
-    "mypy>=1.14.0",
-    "anyio>=4.7.0",
-    "licensecheck>=2024.3",
+    "ruff>=0.11.2",
+    "mypy>=1.15.0",
+    "anyio>=4.9.0",
+    "licensecheck>=2025.0.1",
 ]
 
 [tool.prisma]
