@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, override
 
 from fastapi import APIRouter
 
@@ -20,6 +20,7 @@ class GeneralController(IController):
         self._logger = logging_service.get_logger(__name__)
         self._general_service = general_service
 
+    @override
     def register_routers(self, router: APIRouter) -> None:
         @router.get("/")
         async def route() -> Any:

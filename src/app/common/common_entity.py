@@ -1,5 +1,11 @@
 import json
-from typing import Annotated, Any, Generic, TypedDict, TypeVar
+from typing import (
+    Annotated,
+    Any,
+    Generic,
+    TypedDict,
+    TypeVar,
+)
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -10,27 +16,25 @@ class PaginationQueryParams(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def validate_pagination(cls, data: Any) -> Any:
+    def transform(cls, data: Any) -> Any:
         if isinstance(data, str):
             return json.loads(data)
-        if isinstance(data, dict):
-            return data
-        return None
+        return data
 
 
 T = TypeVar("T")
 
 
-class ResponseDataDto(TypedDict, Generic[T]):
+class CommonResponseDataDto(TypedDict, Generic[T]):
     data: T
 
 
-class QueryResponseMetaDto(TypedDict):
+class CommonQueryResponseMetaDto(TypedDict):
     offset: int
     limit: int
     total: int
 
 
-class QueryResponseDto(TypedDict, Generic[T]):
-    meta: QueryResponseMetaDto
+class CommonQueryResponseDto(TypedDict, Generic[T]):
+    meta: CommonQueryResponseMetaDto
     data: list[T]

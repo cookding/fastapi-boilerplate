@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, override
 
 from fastapi import APIRouter, Response, status
 from fastapi.responses import JSONResponse
@@ -13,6 +13,7 @@ class HealthController(IController):
     def __init__(self, health_check_manager: HealthCheckManager) -> None:
         self._health_check_manager = health_check_manager
 
+    @override
     def register_routers(self, router: APIRouter) -> None:
         @router.get("/health")
         async def health(response: Response) -> Any:

@@ -1,3 +1,5 @@
+from typing import override
+
 from punq import Container, Scope
 
 from app.common.interface.icontroller import IController
@@ -7,8 +9,8 @@ from app.common.interface.imodule import IModule
 from app.config.config_service import ConfigService
 from app.general.exception_handler.exception_handlers import (
     NotImplementedExceptionHandler,
+    RequestValidationExceptionHandler,
     UnknownExceptionHandler,
-    ValidationExceptionHandler,
 )
 from app.general.general_controller import GeneralController
 from app.general.general_service import GeneralService
@@ -17,6 +19,7 @@ from app.logging.logging_service import LoggingService
 
 
 class GeneralModule(IModule):
+    @override
     def resolve(self, container: Container) -> None:
         config_service: ConfigService = container.resolve(ConfigService)
         logging_service: LoggingService = container.resolve(LoggingService)
@@ -50,10 +53,12 @@ class GeneralModule(IModule):
             scope=Scope.singleton,
         )
 
-        validation_exception_handler = ValidationExceptionHandler(logging_service)
+        request_validation_exception_handler = RequestValidationExceptionHandler(
+            logging_service
+        )
         self.container.register(
             IExceptionHandler,
-            instance=validation_exception_handler,
+            instance=request_validation_exception_handler,
             scope=Scope.singleton,
         )
         not_implemented_exception_handler = NotImplementedExceptionHandler(
@@ -71,6 +76,7 @@ class GeneralModule(IModule):
             scope=Scope.singleton,
         )
 
+    @override
     def register_exports(self, container: Container) -> None:
         general_controller = self.container.resolve(GeneralController)
         container.register(

@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, Generic, TypeVar
+from typing import Any, TypeVar, override
 
 from fastapi import Request
 from fastapi.encoders import jsonable_encoder
@@ -34,6 +34,7 @@ class AbstractExceptionHandler(IExceptionHandler[T]):
         self._exception_type = exception_type
         self._response_error = response_error
 
+    @override
     def get_handle_class(self) -> type[T]:
         return self._exception_type
 
@@ -44,6 +45,7 @@ class AbstractExceptionHandler(IExceptionHandler[T]):
     def _get_response_body_extra(self, exc: T) -> Any:
         return None
 
+    @override
     async def handle(
         self,
         request: Request,
@@ -64,7 +66,9 @@ class AbstractExceptionHandler(IExceptionHandler[T]):
         )
 
 
-class ValidationExceptionHandler(AbstractExceptionHandler[RequestValidationError]):
+class RequestValidationExceptionHandler(
+    AbstractExceptionHandler[RequestValidationError]
+):
     def __init__(self, logging_service: LoggingService):
         super().__init__(
             logging_service,
@@ -72,9 +76,11 @@ class ValidationExceptionHandler(AbstractExceptionHandler[RequestValidationError
             VALIDATION_ERROR,
         )
 
+    @override
     def _log_exception(self, exc: RequestValidationError) -> None:
         return self._logger.opt(exception=exc).warning("validation error")
 
+    @override
     def _get_response_body_extra(self, exc: RequestValidationError) -> Any:
         return exc.errors()
 
@@ -87,6 +93,7 @@ class NotImplementedExceptionHandler(AbstractExceptionHandler[NotImplementedErro
             NOT_IMPLEMENTED_ERROR,
         )
 
+    @override
     def _log_exception(self, exc: NotImplementedError) -> None:
         return self._logger.opt(exception=exc).error("not implemented")
 
@@ -99,6 +106,7 @@ class UnknownExceptionHandler(AbstractExceptionHandler[Exception]):
             UNKNOWN_ERROR,
         )
 
+    @override
     def _log_exception(self, exc: Exception) -> None:
         message = (hasattr(exc, "message") and exc.message) or str(exc)
         return self._logger.opt(exception=exc).error(f"unknown error: {message}")

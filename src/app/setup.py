@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from punq import Container, Scope
 from sentry_sdk.types import Event, Hint
 
+from app.common.common_api_route import CommonAPIRoute
 from app.common.interface.icontroller import IController
 from app.common.interface.iexception_handler import IExceptionHandler
 from app.common.interface.ihttp_middleware import IHttpMiddleware
@@ -73,6 +74,8 @@ def setup_sentry(container: Container) -> None:
 
 
 def setup_app(app: FastAPI) -> None:
+    app.router.route_class = CommonAPIRoute
+
     container: Container = app.state.container
 
     controllers: list[IController] = container.resolve_all(IController)

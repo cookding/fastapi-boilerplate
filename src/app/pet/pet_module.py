@@ -1,3 +1,5 @@
+from typing import override
+
 from punq import Container, Scope
 
 from app.common.interface.icontroller import IController
@@ -9,6 +11,7 @@ from app.pet.pet_service import PetService
 
 
 class PetModule(IModule):
+    @override
     def resolve(self, container: Container) -> None:
         logging_service = container.resolve(LoggingService)
         data_service = container.resolve(DataService)
@@ -31,6 +34,7 @@ class PetModule(IModule):
             scope=Scope.singleton,
         )
 
+    @override
     def register_exports(self, container: Container) -> None:
         pet_controller = self.container.resolve(PetController)
         container.register(

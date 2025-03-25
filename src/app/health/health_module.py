@@ -1,3 +1,5 @@
+from typing import override
+
 from punq import Container, Scope
 
 from app.common.interface.icontroller import IController
@@ -8,6 +10,7 @@ from app.health.health_controller import HealthController
 
 
 class HealthModule(IModule):
+    @override
     def resolve(self, container: Container) -> None:
         data_service: DataService = container.resolve(DataService)
 
@@ -36,6 +39,7 @@ class HealthModule(IModule):
             scope=Scope.singleton,
         )
 
+    @override
     def register_exports(self, container: Container) -> None:
         health_controller = self.container.resolve(HealthController)
         container.register(

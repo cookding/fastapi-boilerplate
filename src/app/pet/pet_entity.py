@@ -1,13 +1,8 @@
 from typing import Annotated
 
-from prisma.models import Pet
 from pydantic import BaseModel, Field
 
-from app.general.general_entity import (
-    PaginationQueryParams,
-    QueryResponseDto,
-    ResponseDataDto,
-)
+from app.common.common_entity import PaginationQueryParams
 
 
 class CreatePetDto(BaseModel):
@@ -15,12 +10,4 @@ class CreatePetDto(BaseModel):
 
 
 class PetQueryParams(BaseModel):
-    pagination: Annotated[PaginationQueryParams, Field(default=PaginationQueryParams())]
-
-
-class PetsQueryResponseDto(QueryResponseDto[Pet]):
-    pass
-
-
-class PetResponseDataDto(ResponseDataDto[Pet | None]):
-    pass
+    page: Annotated[PaginationQueryParams, Field(default=PaginationQueryParams())]

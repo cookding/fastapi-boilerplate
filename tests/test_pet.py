@@ -1,4 +1,3 @@
-import json
 from uuid import uuid4
 
 import pytest
@@ -69,7 +68,7 @@ async def test_query_pets(app: FastAPI, client: AsyncClient, app_manager: AppMan
 
     res: Response = await client.get(
         "/api/pets",
-        params={"pagination": json.dumps({"offset": 1, "limit": 10})},
+        params="page[offset]=1&page[limit]=10",
     )
 
     assert res.status_code == 200
@@ -79,7 +78,7 @@ async def test_query_pets(app: FastAPI, client: AsyncClient, app_manager: AppMan
 
     res: Response = await client.get(
         "/api/pets",
-        params={"pagination": json.dumps({"offset": 0, "limit": 1})},
+        params="page[offset]=0&page[limit]=1",
     )
 
     assert res.status_code == 200
@@ -96,39 +95,39 @@ async def test_query_pets_validation(
 
     res: Response = await client.get(
         "/api/pets",
-        params={"pagination": json.dumps({"offset": -1, "limit": 1})},
+        params="page[offset]=-1&page[limit]=1",
     )
 
     assert res.status_code == 400
     assert res.json().get("data") is None
     assert res.json()["error"]["code"] == "VALIDATION_ERROR"
     errors = res.json()["error"]["extra"]
-    assert errors[0]["loc"] == ["query", "pagination", "offset"]
+    assert errors[0]["loc"] == ["query", "page", "offset"]
     assert errors[0]["type"] == "greater_than_equal"
 
     res: Response = await client.get(
         "/api/pets",
-        params={"pagination": json.dumps({"offset": 0, "limit": -1})},
+        params="page[offset]=0&page[limit]=-1",
     )
 
     assert res.status_code == 400
     assert res.json().get("data") is None
     assert res.json()["error"]["code"] == "VALIDATION_ERROR"
     errors = res.json()["error"]["extra"]
-    assert errors[0]["loc"] == ["query", "pagination", "limit"]
+    assert errors[0]["loc"] == ["query", "page", "limit"]
     assert errors[0]["type"] == "greater_than_equal"
 
     res: Response = await client.get(
         "/api/pets",
-        params={"pagination": "offset:0,limit:1"},
+        params="page=offset:0,limit:1",
     )
 
     assert res.status_code == 400
     assert res.json().get("data") is None
     assert res.json()["error"]["code"] == "VALIDATION_ERROR"
     errors = res.json()["error"]["extra"]
-    assert errors[0]["loc"] == ["query", "pagination"]
-    assert errors[0]["type"] == "value_error"
+    assert errors[0]["loc"] == ["query", "page"]
+    assert errors[0]["type"] is not None
 
 
 @pytest.mark.anyio

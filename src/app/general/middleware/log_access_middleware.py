@@ -1,5 +1,5 @@
 import time
-from typing import Awaitable, Callable
+from typing import Awaitable, Callable, override
 
 from fastapi import Request, Response
 
@@ -16,6 +16,7 @@ class LogAccessMiddleware(IHttpMiddleware):
         self._excludes = excludes
         self._logger = logging_service.get_logger(__name__)
 
+    @override
     async def dispatch(
         self,
         request: Request,
@@ -41,7 +42,7 @@ class LogAccessMiddleware(IHttpMiddleware):
                     "method": request.method,
                     "path": request.url.path,
                     "status_code": response.status_code,
-                    "process_time": process_time,
+                    "process_time": round(process_time, 3),
                 },
             )
             return response

@@ -5,7 +5,7 @@ import logging
 import os
 import sys
 from types import FrameType
-from typing import cast
+from typing import cast, override
 
 import loguru
 from loguru import logger as _logger
@@ -14,6 +14,7 @@ from app.logging.logger import Logger
 
 
 class InterceptHandler(logging.Handler):
+    @override
     def emit(self, record: logging.LogRecord) -> None:  # pragma: no cover
         # Get corresponding Loguru level if it exists
         try:

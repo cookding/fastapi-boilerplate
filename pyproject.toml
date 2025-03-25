@@ -4,11 +4,12 @@ version = "0.1.0"
 description = "FastAPI Boilerplate"
 authors = [{ name = "Cook Ding Developers", email = "developer@cookding.com" }]
 dependencies = [
-    "fastapi[standard]>=0.115.11",
+    "fastapi[standard]>=0.115.12",
     "punq>=0.7.0",
     "loguru>=0.7.3",
     "prisma>=0.15.0",
-    "sentry-sdk[fastapi]>=2.24.0",
+    "sentry-sdk[fastapi]>=2.24.1",
+    "qs-codec>=1.1.0",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"
@@ -63,6 +64,8 @@ ignore_missing_imports = true
 disallow_incomplete_defs = true
 disallow_untyped_defs = true
 disallow_untyped_decorators = true
+no_implicit_reexport = false
+enable_error_code = "explicit-override"
 
 [[tool.mypy.overrides]]
 module = "src.*"
@@ -81,17 +84,18 @@ src = ["src"]
 
 [tool.ruff.lint]
 select = [
-    "I",   # isort
-    "B",   # flake8-bugbear
-    "C4",  # flake8-comprehensions
-    "PGH", # pygrep-hooks
-    "RUF", # ruff
-    "TID", # flake8-tidy-imports
-    "W",   # pycodestyle
-    "YTT", # flake8-2020
+    "I",       # isort
+    "B",       # flake8-bugbear
+    "C4",      # flake8-comprehensions
+    "F401",    # unused-import
     "FAST001", # fast-api-redundant-response-model
     "FAST002", # fast-api-non-annotated-dependency
     "FAST003", # fast-api-unused-path-parameter
+    "PGH",     # pygrep-hooks
+    "RUF",     # ruff
+    "TID",     # flake8-tidy-imports
+    "W",       # pycodestyle
+    "YTT",     # flake8-2020
 ]
 ignore = [
     "B008",   # function-call-in-default-argument

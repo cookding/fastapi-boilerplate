@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:1e424646201cfee15832ebca7fedc2d084d96d7097addeb33031fea59da780a0"
+content_hash = "sha256:6bf334f5e9a4830c087122827280c00c062603251d310a25845157a4215f2191"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -218,7 +218,7 @@ files = [
 
 [[package]]
 name = "fastapi"
-version = "0.115.11"
+version = "0.115.12"
 requires_python = ">=3.8"
 summary = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
 groups = ["default"]
@@ -228,7 +228,7 @@ dependencies = [
     "typing-extensions>=4.8.0",
 ]
 files = [
-    {file = "fastapi-0.115.11-py3-none-any.whl", hash = "sha256:32e1541b7b74602e4ef4a0260ecaf3aadf9d4f19590bba3e1bf2ac4666aa2c64"},
+    {file = "fastapi-0.115.12-py3-none-any.whl", hash = "sha256:e94613d6c05e27be7ffebdd6ea5f388112e5e430c8f7d6494a9d1d88d43e814d"},
 ]
 
 [[package]]
@@ -263,7 +263,7 @@ files = [
 
 [[package]]
 name = "fastapi"
-version = "0.115.11"
+version = "0.115.12"
 extras = ["standard"]
 requires_python = ">=3.8"
 summary = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
@@ -271,14 +271,14 @@ groups = ["default"]
 dependencies = [
     "email-validator>=2.0.0",
     "fastapi-cli[standard]>=0.0.5",
-    "fastapi==0.115.11",
+    "fastapi==0.115.12",
     "httpx>=0.23.0",
     "jinja2>=3.1.5",
     "python-multipart>=0.0.18",
     "uvicorn[standard]>=0.12.0",
 ]
 files = [
-    {file = "fastapi-0.115.11-py3-none-any.whl", hash = "sha256:32e1541b7b74602e4ef4a0260ecaf3aadf9d4f19590bba3e1bf2ac4666aa2c64"},
+    {file = "fastapi-0.115.12-py3-none-any.whl", hash = "sha256:e94613d6c05e27be7ffebdd6ea5f388112e5e430c8f7d6494a9d1d88d43e814d"},
 ]
 
 [[package]]
@@ -705,6 +705,44 @@ files = [
 ]
 
 [[package]]
+name = "qs-codec"
+version = "1.1.0"
+requires_python = ">=3.9"
+summary = "A query string encoding and decoding library for Python. Ported from qs for JavaScript."
+groups = ["default"]
+dependencies = [
+    "regex>=2024.11.6",
+    "types-regex>=2024.11.6.20250305",
+]
+files = [
+    {file = "qs_codec-1.1.0-py3-none-any.whl", hash = "sha256:8ca7ec0e52f6951f1dc5ab3b2b16909887e2b1194bd24b7f5637b917be704d95"},
+]
+
+[[package]]
+name = "regex"
+version = "2024.11.6"
+requires_python = ">=3.8"
+summary = "Alternative regular expression module, to replace re."
+groups = ["default"]
+files = [
+    {file = "regex-2024.11.6-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:52fb28f528778f184f870b7cf8f225f5eef0a8f6e3778529bdd40c7b3920796a"},
+    {file = "regex-2024.11.6-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:fdd6028445d2460f33136c55eeb1f601ab06d74cb3347132e1c24250187500d9"},
+    {file = "regex-2024.11.6-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:805e6b60c54bf766b251e94526ebad60b7de0c70f70a4e6210ee2891acb70bf2"},
+    {file = "regex-2024.11.6-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b85c2530be953a890eaffde05485238f07029600e8f098cdf1848d414a8b45e4"},
+    {file = "regex-2024.11.6-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:bb26437975da7dc36b7efad18aa9dd4ea569d2357ae6b783bf1118dabd9ea577"},
+    {file = "regex-2024.11.6-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:abfa5080c374a76a251ba60683242bc17eeb2c9818d0d30117b4486be10c59d3"},
+    {file = "regex-2024.11.6-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:70b7fa6606c2881c1db9479b0eaa11ed5dfa11c8d60a474ff0e095099f39d98e"},
+    {file = "regex-2024.11.6-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:0c32f75920cf99fe6b6c539c399a4a128452eaf1af27f39bce8909c9a3fd8cbe"},
+    {file = "regex-2024.11.6-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:982e6d21414e78e1f51cf595d7f321dcd14de1f2881c5dc6a6e23bbbbd68435e"},
+    {file = "regex-2024.11.6-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:a7c2155f790e2fb448faed6dd241386719802296ec588a8b9051c1f5c481bc29"},
+    {file = "regex-2024.11.6-cp312-cp312-musllinux_1_2_ppc64le.whl", hash = "sha256:149f5008d286636e48cd0b1dd65018548944e495b0265b45e1bffecce1ef7f39"},
+    {file = "regex-2024.11.6-cp312-cp312-musllinux_1_2_s390x.whl", hash = "sha256:e5364a4502efca094731680e80009632ad6624084aff9a23ce8c8c6820de3e51"},
+    {file = "regex-2024.11.6-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:0a86e7eeca091c09e021db8eb72d54751e527fa47b8d5787caf96d9831bd02ad"},
+    {file = "regex-2024.11.6-cp312-cp312-win32.whl", hash = "sha256:32f9a4c643baad4efa81d549c2aadefaeba12249b2adc5af541759237eee1c54"},
+    {file = "regex-2024.11.6-cp312-cp312-win_amd64.whl", hash = "sha256:a93c194e2df18f7d264092dc8539b8ffb86b45b899ab976aa15d48214138e81b"},
+]
+
+[[package]]
 name = "requests"
 version = "2.32.3"
 requires_python = ">=3.8"
@@ -810,7 +848,7 @@ files = [
 
 [[package]]
 name = "sentry-sdk"
-version = "2.24.0"
+version = "2.24.1"
 requires_python = ">=3.6"
 summary = "Python client for Sentry (https://sentry.io)"
 groups = ["default"]
@@ -819,22 +857,22 @@ dependencies = [
     "urllib3>=1.26.11",
 ]
 files = [
-    {file = "sentry_sdk-2.24.0-py2.py3-none-any.whl", hash = "sha256:7150cfe61dfd37d30b33d8d6b153d25e14c69bbcf6f4a98ffc97e92de88be215"},
+    {file = "sentry_sdk-2.24.1-py2.py3-none-any.whl", hash = "sha256:36baa6a1128b9d98d2adc5e9b2f887eff0a6af558fc2b96ed51919042413556d"},
 ]
 
 [[package]]
 name = "sentry-sdk"
-version = "2.24.0"
+version = "2.24.1"
 extras = ["fastapi"]
 requires_python = ">=3.6"
 summary = "Python client for Sentry (https://sentry.io)"
 groups = ["default"]
 dependencies = [
     "fastapi>=0.79.0",
-    "sentry-sdk==2.24.0",
+    "sentry-sdk==2.24.1",
 ]
 files = [
-    {file = "sentry_sdk-2.24.0-py2.py3-none-any.whl", hash = "sha256:7150cfe61dfd37d30b33d8d6b153d25e14c69bbcf6f4a98ffc97e92de88be215"},
+    {file = "sentry_sdk-2.24.1-py2.py3-none-any.whl", hash = "sha256:36baa6a1128b9d98d2adc5e9b2f887eff0a6af558fc2b96ed51919042413556d"},
 ]
 
 [[package]]
@@ -925,6 +963,16 @@ dependencies = [
 ]
 files = [
     {file = "typer-0.15.1-py3-none-any.whl", hash = "sha256:7994fb7b8155b64d3402518560648446072864beefd44aa2dc36972a5972e847"},
+]
+
+[[package]]
+name = "types-regex"
+version = "2024.11.6.20250318"
+requires_python = ">=3.9"
+summary = "Typing stubs for regex"
+groups = ["default"]
+files = [
+    {file = "types_regex-2024.11.6.20250318-py3-none-any.whl", hash = "sha256:9309fe5918ee7ffe859c04c18040697655fade366c4dc844bbebe86976a9980b"},
 ]
 
 [[package]]
