@@ -9,7 +9,7 @@ dependencies = [
     "loguru>=0.7.3",
     "prisma>=0.15.0",
     "sentry-sdk[fastapi]>=2.24.1",
-    "qs-codec>=1.1.0",
+    "qs-codec>=1.1.1",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"
@@ -64,7 +64,6 @@ ignore_missing_imports = true
 disallow_incomplete_defs = true
 disallow_untyped_defs = true
 disallow_untyped_decorators = true
-no_implicit_reexport = false
 enable_error_code = "explicit-override"
 
 [[tool.mypy.overrides]]
