@@ -1,4 +1,5 @@
 import os
+import re
 
 from app.config.config_entity import Config
 
@@ -23,6 +24,14 @@ class ConfigService:
             == "true",
             sentry_traces_sample_rate=float(
                 os.getenv("SENTRY_TRACES_SAMPLE_RATE", "0.0")
+            ),
+            database_url=re.sub(
+                r"^postgresql:",
+                "postgres:",
+                os.getenv(
+                    "DATABASE_URL",
+                    "postgres://postgres:password@localhost:5432/fastapi_boilerplate?schema=public",
+                ),
             ),
         )
 

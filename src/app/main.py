@@ -7,6 +7,18 @@ from app.setup import setup
 
 app = setup()
 
+TORTOISE_ORM = {
+    "connections": {
+        "default": app.state.container.resolve(ConfigService).config.database_url
+    },
+    "apps": {
+        "models": {
+            "models": ["app.pet.pet_model", "aerich.models"],
+            "default_connection": "default",
+        },
+    },
+}
+
 if __name__ == "__main__":
     config_service: ConfigService = app.state.container.resolve(ConfigService)
     logging_service: LoggingService = app.state.container.resolve(LoggingService)

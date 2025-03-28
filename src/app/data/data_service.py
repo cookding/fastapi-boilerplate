@@ -1,19 +1,34 @@
-from prisma import Prisma
+from tortoise import Tortoise
+
+from app.config.config_entity import Config
+from app.config.config_service import ConfigService
+from app.logging.logger import Logger
+from app.logging.logging_service import LoggingService
 
 
 class DataService:
-    db: Prisma
+    _config: Config
+    _logger: Logger
 
-    def __init__(self) -> None:
-        self.db = Prisma()
+    def __init__(
+        self,
+        config_service: ConfigService,
+        logging_service: LoggingService,
+    ) -> None:
+        self._config = config_service.config
+        self._logger = logging_service.get_logger(__name__)
 
     async def connect(self) -> None:
-        if not self.db.is_connected():
-            await self.db.connect()
+        self._logger.info("Connecting to database")
+        await Tortoise.init(
+            db_url=self._config.database_url,
+            modules={"models": ["app.pet.pet_model"]},
+            use_tz=True,
+            timezone="UTC",
+        )
+        self._logger.info("Connected to database")
 
     async def disconnect(self) -> None:
-        if self.db.is_connected():
-            await self.db.disconnect()
-
-    def get_db(self) -> Prisma:
-        return self.db
+        self._logger.info("Disconnecting database")
+        await Tortoise.close_connections()
+        self._logger.info("Disconnected database")

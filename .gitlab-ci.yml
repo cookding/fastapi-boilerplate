@@ -22,21 +22,9 @@ build_job:
     APP_PORT: "4000"
     DATABASE_URL: "postgresql://postgres:password@postgres:5432/fastapi_boilerplate?schema=public"
   script:
-    - |
-      set -eux; \
-      sed -i "s/deb.debian.org/${APT_DEBIAN_MIRROR_HOST}/g" /etc/apt/sources.list.d/debian.sources; \
-      apt-get update; \
-      apt-get install -y --no-install-recommends \
-        nodejs \
-        npm \
-        openssl \
-      ;
     - pip install --index-url ${PIP_INDEX_URL} pdm
     - python -m venv .venv
     - pdm install
-    - npm config set registry "${NPM_REGISTRY}"
-    - npm config set "${NPM_REGISTRY_TOKEN_KEY}" "${NPM_REGISTRY_TOKEN_VALUE}"
-    - pdm run prisma-generate
     - pdm run migrate-deploy
     - pdm run lint
     - pdm run test-cov
@@ -64,9 +52,6 @@ release_job:
       --build-arg PDM_PYPI_URL=${PDM_PYPI_URL} \
       --build-arg PDM_PYPI_USERNAME=${PDM_PYPI_USERNAME} \
       --build-arg PDM_PYPI_PASSWORD=${PDM_PYPI_PASSWORD} \
-      --build-arg NPM_REGISTRY=${NPM_REGISTRY} \
-      --build-arg NPM_REGISTRY_TOKEN_KEY=${NPM_REGISTRY_TOKEN_KEY} \
-      --build-arg NPM_REGISTRY_TOKEN_VALUE=${NPM_REGISTRY_TOKEN_VALUE} \
       --tag $CI_DOCKER_REGISTRY/cookding/foundation/fastapi-boilerplate:$VERSION .
     - docker push $CI_DOCKER_REGISTRY/cookding/foundation/fastapi-boilerplate:$VERSION
     - docker tag $CI_DOCKER_REGISTRY/cookding/foundation/fastapi-boilerplate:$VERSION $CI_DOCKER_REGISTRY/cookding/foundation/fastapi-boilerplate:latest

@@ -12,3 +12,4 @@ class Config:
     sentry_environment: str
     sentry_send_default_pii: bool
     sentry_traces_sample_rate: float
+    database_url: str

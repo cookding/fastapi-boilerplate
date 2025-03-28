@@ -6,7 +6,6 @@ A template for building server-side applications with FastAPI.
 
 * Python 3.12: to run the app
 * PDM: the package and dependency manager
-* Node.js 22: required by `prisma`
 * Docker: to run database setup scripts
 * bash: to run some scripts
 
@@ -20,9 +19,8 @@ $ pdm run db-up
 $ cp .env.example .env
 # edit the variables in `.env` if you want
 
-# restore dependencies & generate prisma client
+# restore dependencies
 $ pdm install
-$ pdm run prisma-generate
 
 # migrate database
 $ pdm run migrate-deploy
@@ -50,19 +48,12 @@ $ pdm run db-down
 ### How to change database schema
 
 ```bash
-# update schema definitions in prisma/schema.prisma
-
-# format the prisma schema
-$ pdm run prisma-format
+# update the model in code
 
 # generate migration script
 $ pdm run migrate-dev-create
-# enter the migration script name in the cli interaction
+# adjust the migration script in `src/app/migrations/models/`
 
 # apply the migration scripts
 $ pdm run migrate-deploy
-
-# before start application
-# don't forget to generate prisma client based on latest prisma schema
-$ pdm run prisma-generate
 ```

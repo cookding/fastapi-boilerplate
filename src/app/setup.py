@@ -18,7 +18,6 @@ from app.data.data_module import DataModule
 from app.data.data_service import DataService
 from app.general.general_module import GeneralModule
 from app.health.health_module import HealthModule
-from app.logging.logger import Logger
 from app.logging.logging_module import LoggingModule
 from app.logging.logging_service import LoggingService
 from app.pet.pet_module import PetModule
@@ -97,16 +96,12 @@ def setup_app(app: FastAPI) -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    logging_service: LoggingService = app.state.container.resolve(LoggingService)
     data_service: DataService = app.state.container.resolve(DataService)
-    logger: Logger = logging_service.get_logger(__name__)
-    logger.info("Connecting to database")
-    await data_service.connect()
-    logger.info("Connected to database")
-    yield
-    logger.info("Disconnecting database")
-    await data_service.disconnect()
-    logger.info("Disconnected database")
+    try:
+        await data_service.connect()
+        yield
+    finally:
+        await data_service.disconnect()
 
 
 def setup() -> FastAPI:

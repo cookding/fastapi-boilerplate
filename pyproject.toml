@@ -7,9 +7,10 @@ dependencies = [
     "fastapi[standard]>=0.115.12",
     "punq>=0.7.0",
     "loguru>=0.7.3",
-    "prisma>=0.15.0",
     "sentry-sdk[fastapi]>=2.24.1",
     "qs-codec>=1.1.1",
+    "tortoise-orm[asyncpg]>=0.24.2",
+    "aerich[toml]>=0.8.2",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"
@@ -27,11 +28,12 @@ lint = { shell = """\
 """ }
 db-up = "bash scripts/db-up.sh"
 db-down = "bash scripts/db-down.sh"
-prisma-format = "prisma format"
-prisma-generate = "prisma generate"
-migrate-dev-create = "prisma migrate dev --create-only"
-migrate-deploy = "prisma migrate deploy"
-migrate-status = "prisma migrate status"
+migrate-dev-create.cmd = "aerich migrate"
+migrate-dev-create.env = { PYTHONPATH = "./src/"}
+migrate-deploy.cmd = "aerich upgrade"
+migrate-deploy.env = { PYTHONPATH = "./src/"}
+migrate-status.cmd = "aerich heads"
+migrate-status.env = { PYTHONPATH = "./src/"}
 dev.cmd = "uvicorn src.app.main:app --host=${APP_HOST} --port=${APP_PORT} --log-level=${LOG_LEVEL} --reload"
 dev.env = { PYTHONPATH = "./src/"}
 dev.env_file = ".env"
@@ -53,9 +55,6 @@ dev = [
     "anyio>=4.9.0",
     "licensecheck==2024.3",
 ]
-
-[tool.prisma]
-binary_cache_dir = '.venv/prisma-binaries'
 
 [tool.mypy]
 strict = true
@@ -131,3 +130,8 @@ exclude_lines = [
 [tool.licensecheck]
 using = "PEP631"
 format = "simple"
+
+[tool.aerich]
+tortoise_orm = "app.main.TORTOISE_ORM"
+location = "./src/app/migrations"
+src_folder = "./src/app"

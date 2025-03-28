@@ -1,8 +1,6 @@
 from typing import Annotated, override
 
 from fastapi import APIRouter, Body, Path, Query
-from prisma.models import Pet
-from prisma.types import PetCreateInput
 
 from app.common.common_entity import (
     CommonQueryResponseDto,
@@ -11,7 +9,7 @@ from app.common.common_entity import (
 from app.common.interface.icontroller import IController
 from app.logging.logger import Logger
 from app.logging.logging_service import LoggingService
-from app.pet.pet_entity import CreatePetDto, PetQueryParams
+from app.pet.pet_entity import Pet, PetCreateInput, PetQueryParams
 from app.pet.pet_service import PetService
 
 
@@ -31,9 +29,9 @@ class PetController(IController):
     def register_routers(self, router: APIRouter) -> None:
         @router.post("/api/pets")
         async def create(
-            body: Annotated[CreatePetDto, Body()],
+            body: Annotated[PetCreateInput, Body()],
         ) -> CommonResponseDataDto[Pet]:
-            pet = await self._pet_service.create(PetCreateInput(name=body.name))
+            pet = await self._pet_service.create(body)
             return {
                 "data": pet,
             }
@@ -43,12 +41,12 @@ class PetController(IController):
             query: Annotated[PetQueryParams, Query()],
         ) -> CommonQueryResponseDto[Pet]:
             page = query.page
-            skip = page.offset
-            take = page.limit
+            offset = page.offset
+            limit = page.limit
             count = await self._pet_service.count()
-            pets = await self._pet_service.query(skip=skip, take=take)
+            pets = await self._pet_service.query(offset=offset, limit=limit)
             return {
-                "meta": {"offset": skip, "limit": take, "total": count},
+                "meta": {"offset": offset, "limit": limit, "total": count},
                 "data": pets,
             }
 

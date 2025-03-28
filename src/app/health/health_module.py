@@ -4,19 +4,16 @@ from punq import Container, Scope
 
 from app.common.interface.icontroller import IController
 from app.common.interface.imodule import IModule
-from app.data.data_service import DataService
 from app.health.health_check_manager import UNHEALTHY, HealthCheckManager
 from app.health.health_controller import HealthController
+from app.pet.pet_model import PetModel
 
 
 class HealthModule(IModule):
     @override
     def resolve(self, container: Container) -> None:
-        data_service: DataService = container.resolve(DataService)
-
         async def check_database() -> None:
-            db = data_service.get_db()
-            await db.pet.find_first()
+            await PetModel.first()
 
         health_check_manager = HealthCheckManager()
         health_check_manager.add_checker(
