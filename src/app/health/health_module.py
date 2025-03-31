@@ -6,14 +6,14 @@ from app.common.interface.icontroller import IController
 from app.common.interface.imodule import IModule
 from app.health.health_check_manager import UNHEALTHY, HealthCheckManager
 from app.health.health_controller import HealthController
-from app.pet.pet_model import PetModel
+from app.pet.pet_record import PetRecord
 
 
 class HealthModule(IModule):
     @override
     def resolve(self, container: Container) -> None:
         async def check_database() -> None:
-            await PetModel.first()
+            await PetRecord.first()
 
         health_check_manager = HealthCheckManager()
         health_check_manager.add_checker(

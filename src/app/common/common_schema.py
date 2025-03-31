@@ -25,16 +25,16 @@ class PaginationQueryParams(BaseModel):
 T = TypeVar("T")
 
 
-class CommonResponseDataDto(TypedDict, Generic[T]):
+class CommonResponseData(TypedDict, Generic[T]):
     data: T
 
 
-class CommonQueryResponseMetaDto(TypedDict):
+class CommonQueryResponseMeta(TypedDict):
     offset: int
     limit: int
     total: int
 
 
-class CommonQueryResponseDto(TypedDict, Generic[T]):
-    meta: CommonQueryResponseMetaDto
+class CommonQueryResponse(TypedDict, Generic[T]):
+    meta: CommonQueryResponseMeta
     data: list[T]

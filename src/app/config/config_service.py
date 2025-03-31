@@ -1,7 +1,7 @@
 import os
 import re
 
-from app.config.config_entity import Config
+from app.config.config_schema import Config
 
 
 class ConfigService:
@@ -9,6 +9,7 @@ class ConfigService:
 
     def __init__(self) -> None:
         self._config = Config(
+            app_name=os.getenv("APP_NAME", "fastapi-boilerplate"),
             app_host=os.getenv("APP_HOST", "127.0.0.1"),
             app_port=int(os.getenv("APP_PORT", "4000")),
             log_format=os.getenv("LOG_FORMAT", "text"),

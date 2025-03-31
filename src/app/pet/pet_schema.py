@@ -3,7 +3,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field
 
-from app.common.common_entity import PaginationQueryParams
+from app.common.common_schema import PaginationQueryParams
 
 
 class Pet(BaseModel):

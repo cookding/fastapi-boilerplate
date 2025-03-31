@@ -2,8 +2,8 @@ from uuid import uuid4  # TODO: use uuid7 after python 3.14
 
 from app.logging.logger import Logger
 from app.logging.logging_service import LoggingService
-from app.pet.pet_entity import Pet, PetCreateInput
-from app.pet.pet_model import PetModel
+from app.pet.pet_record import PetRecord
+from app.pet.pet_schema import Pet, PetCreateInput
 
 
 class PetService:
@@ -17,20 +17,20 @@ class PetService:
 
     async def create(self, pet: PetCreateInput) -> Pet:
         self._logger.info("creating pet")
-        created_pet = await PetModel.create(id=uuid4(), **pet.model_dump())
+        created_pet = await PetRecord.create(id=uuid4().hex, **pet.model_dump())
         self._logger.info("created pet", data={"id": created_pet.id})
         return created_pet.json()
 
     async def query(self, offset: int, limit: int) -> list[Pet]:
         self._logger.info("querying pets")
-        pets = await PetModel.filter().offset(offset).limit(limit)
+        pets = await PetRecord.filter().offset(offset).limit(limit)
         return [pet.json() for pet in pets]
 
     async def delete(self, id: str) -> None:
         self._logger.info("deleting pets")
-        await PetModel.filter(id=id).delete()
+        await PetRecord.filter(id=id).delete()
 
     async def count(self) -> int:
         self._logger.info("counting pets")
-        count = await PetModel.all().count()
+        count = await PetRecord.all().count()
         return count

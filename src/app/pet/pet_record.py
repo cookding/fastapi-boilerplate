@@ -1,10 +1,10 @@
 from tortoise import Model
 from tortoise.fields import CharField, DatetimeField
 
-from app.pet.pet_entity import Pet
+from app.pet.pet_schema import Pet
 
 
-class PetModel(Model):
+class PetRecord(Model):
     class Meta:
         table = "pets"
 

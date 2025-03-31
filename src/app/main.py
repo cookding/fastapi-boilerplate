@@ -1,6 +1,7 @@
 from uvicorn import Config, Server
 
 from app.config.config_service import ConfigService
+from app.data.data_service import DataService
 from app.logging.logger import Logger
 from app.logging.logging_service import LoggingService
 from app.setup import setup
@@ -13,7 +14,10 @@ TORTOISE_ORM = {
     },
     "apps": {
         "models": {
-            "models": ["app.pet.pet_model", "aerich.models"],
+            "models": [
+                "aerich.models",
+                *app.state.container.resolve(DataService).models,
+            ],
             "default_connection": "default",
         },
     },

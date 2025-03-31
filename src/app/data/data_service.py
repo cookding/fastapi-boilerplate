@@ -1,6 +1,6 @@
 from tortoise import Tortoise
 
-from app.config.config_entity import Config
+from app.config.config_schema import Config
 from app.config.config_service import ConfigService
 from app.logging.logger import Logger
 from app.logging.logging_service import LoggingService
@@ -18,11 +18,17 @@ class DataService:
         self._config = config_service.config
         self._logger = logging_service.get_logger(__name__)
 
+    @property
+    def models(self) -> list[str]:
+        return [
+            "app.pet.pet_record",
+        ]
+
     async def connect(self) -> None:
         self._logger.info("Connecting to database")
         await Tortoise.init(
             db_url=self._config.database_url,
-            modules={"models": ["app.pet.pet_model"]},
+            modules={"models": self.models},
             use_tz=True,
             timezone="UTC",
         )

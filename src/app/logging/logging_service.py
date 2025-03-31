@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 import sys
 from types import FrameType
 from typing import cast, override
@@ -38,14 +37,14 @@ class LoggingService:
     _handlers: list[loguru.HandlerConfig]
     _logger: loguru.Logger
 
-    def __init__(self, log_format: str, log_level: str) -> None:
+    def __init__(self, app_name: str, log_format: str, log_level: str) -> None:
         def sink(message: loguru.Message) -> None:
             record: loguru.Record = message.record
             if log_format == "json":
                 data: dict[str, str | int | None] = {
                     "time": record["time"].isoformat(),
                     "level": record["level"].no,
-                    "app_name": os.getenv("APP_NAME") or "",
+                    "app_name": app_name,
                     "message": record["message"],
                     "exception": str(record["exception"]),
                     "extra": str(record["extra"]),

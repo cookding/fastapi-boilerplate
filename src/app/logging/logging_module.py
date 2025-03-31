@@ -12,6 +12,7 @@ class LoggingModule(IModule):
     def resolve(self, container: Container) -> None:
         config_service: ConfigService = container.resolve(ConfigService)
         logging_service = LoggingService(
+            app_name=config_service.config.app_name,
             log_format=config_service.config.log_format,
             log_level=config_service.config.log_level,
         )
