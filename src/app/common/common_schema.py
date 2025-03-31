@@ -7,10 +7,19 @@ from typing import (
     TypeVar,
 )
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
-class PaginationQueryParams(BaseModel):
+class CamelCaseModel(BaseModel):
+    model_config = ConfigDict(
+        alias_generator=lambda x: "".join(
+            word.capitalize() if i > 0 else word for i, word in enumerate(x.split("_"))
+        ),
+        populate_by_name=True,
+    )
+
+
+class PaginationQueryParams(CamelCaseModel):
     offset: Annotated[int, Field(0, ge=0)]
     limit: Annotated[int, Field(10, ge=1, le=100)]
 

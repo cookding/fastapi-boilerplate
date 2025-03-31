@@ -11,20 +11,38 @@ from tests.app_manager import AppManager
 async def test_create_pets(app: FastAPI, client: AsyncClient, app_manager: AppManager):
     await app_manager.reset_data()
     name: str = str(uuid4())[0:10]
+    avatar_url: str | None = "https://example.com/avatar.png"
+
     res: Response = await client.post(
-        "/api/pets",
-        json={"name": name},
+        "/api/pets", json={"name": name, "avatarUrl": avatar_url}
+    )
+
+    assert res.status_code == 200
+    assert res.json()["data"]["id"] is not None
+    assert res.json()["data"]["name"] == name
+    assert res.json()["data"]["avatarUrl"] == avatar_url
+    assert res.json()["data"]["createdAt"] is not None
+    assert res.json()["data"]["updatedAt"] is not None
+    pet = res.json()["data"]
+    res = await client.get("/api/pets")
+    assert res.status_code == 200
+    assert res.json()["meta"]["total"] == 1
+    assert pet in res.json()["data"]
+
+    name: str = str(uuid4())[0:10]
+    avatar_url: str | None = None
+
+    res: Response = await client.post(
+        "/api/pets", json={"name": name, "avatarUrl": avatar_url}
     )
 
     assert res.status_code == 200
     assert res.json()["data"]["name"] == name
-
+    assert res.json()["data"]["avatarUrl"] == avatar_url
     pet = res.json()["data"]
-
     res = await client.get("/api/pets")
-
     assert res.status_code == 200
-    assert res.json()["meta"]["total"] == 1
+    assert res.json()["meta"]["total"] == 2
     assert pet in res.json()["data"]
 
 
@@ -34,6 +52,7 @@ async def test_create_pets_validation(
 ):
     await app_manager.reset_data()
     name: str = str(uuid4())[0:30]
+
     res: Response = await client.post(
         "/api/pets",
         json={"name": name},
@@ -44,6 +63,21 @@ async def test_create_pets_validation(
     assert res.json()["error"]["code"] == "VALIDATION_ERROR"
     errors = res.json()["error"]["extra"]
     assert errors[0]["loc"] == ["body", "name"]
+    assert errors[0]["type"] == "string_too_long"
+
+    name: str = str(uuid4())[0:10]
+    avatar_url: str = "https://example.com/" + "-" * 2000 + "avatar.png"
+
+    res: Response = await client.post(
+        "/api/pets",
+        json={"name": name, "avatarUrl": avatar_url},
+    )
+
+    assert res.status_code == 400
+    assert res.json().get("data") is None
+    assert res.json()["error"]["code"] == "VALIDATION_ERROR"
+    errors = res.json()["error"]["extra"]
+    assert errors[0]["loc"] == ["body", "avatarUrl"]
     assert errors[0]["type"] == "string_too_long"
 
 
@@ -91,8 +125,6 @@ async def test_query_pets(app: FastAPI, client: AsyncClient, app_manager: AppMan
 async def test_query_pets_validation(
     app: FastAPI, client: AsyncClient, app_manager: AppManager
 ):
-    await app_manager.reset_data()
-
     res: Response = await client.get(
         "/api/pets",
         params="page[offset]=-1&page[limit]=1",
@@ -144,8 +176,6 @@ async def test_delete_pets(app: FastAPI, client: AsyncClient, app_manager: AppMa
 
     assert res.status_code == 200
     assert res.json()["data"] is None
-
     res = await client.get("/api/pets")
-
     assert res.status_code == 200
     assert pet not in res.json()["data"]
