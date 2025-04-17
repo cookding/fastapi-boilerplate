@@ -122,6 +122,52 @@ async def test_query_pets(app: FastAPI, client: AsyncClient, app_manager: AppMan
 
 
 @pytest.mark.anyio
+async def test_query_pets_with_filter(
+    app: FastAPI, client: AsyncClient, app_manager: AppManager
+):
+    await app_manager.reset_data()
+    for _ in range(3):
+        name: str = str(uuid4())[0:10]
+        res: Response = await client.post(
+            "/api/pets",
+            json={"name": name},
+        )
+
+    res: Response = await client.get(
+        "/api/pets",
+    )
+
+    pets = res.json().get("data")
+
+    res: Response = await client.get(
+        "/api/pets",
+        params=f"filter[name][$eq]={pets[0]['name']}",
+    )
+
+    assert res.status_code == 200
+    assert len(res.json().get("data")) == 1
+    assert res.json().get("data")[0]["id"] == pets[0]["id"]
+
+    res: Response = await client.get(
+        "/api/pets",
+        params=f"filter[createdAt][$eq]={pets[0]['createdAt']}",
+    )
+
+    assert res.status_code == 200
+    assert len(res.json().get("data")) == 1
+    assert res.json().get("data")[0]["id"] == pets[0]["id"]
+
+    res: Response = await client.get(
+        "/api/pets",
+        params=f"filter[updatedAt][$eq]={pets[0]['updatedAt']}",
+    )
+
+    assert res.status_code == 200
+    assert len(res.json().get("data")) == 1
+    assert res.json().get("data")[0]["id"] == pets[0]["id"]
+
+
+@pytest.mark.anyio
 async def test_query_pets_validation(
     app: FastAPI, client: AsyncClient, app_manager: AppManager
 ):

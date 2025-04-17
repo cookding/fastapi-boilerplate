@@ -1,9 +1,15 @@
+import json
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Any
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
-from app.common.common_schema import CamelCaseModel, PaginationQueryParams
+from app.common.common_schema import (
+    CamelCaseModel,
+    DateTimeFilter,
+    PaginationQueryParams,
+    StringFilter,
+)
 
 
 class Pet(CamelCaseModel):
@@ -19,5 +25,22 @@ class PetCreateInput(CamelCaseModel):
     avatar_url: Annotated[str | None, Field(default=None, max_length=2000)]
 
 
+class PetWhereInput(CamelCaseModel):
+    name: Annotated[StringFilter | None, Field(default=None)]
+    created_at: Annotated[DateTimeFilter | None, Field(default=None)]
+    updated_at: Annotated[DateTimeFilter | None, Field(default=None)]
+
+    @model_validator(mode="before")
+    @classmethod
+    def transform(cls, data: Any) -> Any:
+        if isinstance(data, str):
+            return json.loads(data)
+        return data
+
+    def to_dict(self) -> dict[str, Any]:
+        return self.model_dump(exclude_none=True)
+
+
 class PetQueryParams(CamelCaseModel):
+    filter: Annotated[PetWhereInput, Field(default={})]
     page: Annotated[PaginationQueryParams, Field(default=PaginationQueryParams())]

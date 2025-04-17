@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from typing import (
     Annotated,
     Any,
@@ -8,6 +9,37 @@ from typing import (
 )
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+StringFilter = TypedDict(
+    "StringFilter",
+    {
+        "$eq": str,
+        "$ne": str,
+        "$lt": str,
+        "$lte": str,
+        "$gt": str,
+        "$gte": str,
+        "$in": list[str],
+        "$contains": str,
+        "$startsWith": str,
+        "$endsWith": str,
+    },
+    total=False,
+)
+
+DateTimeFilter = TypedDict(
+    "DateTimeFilter",
+    {
+        "$eq": datetime,
+        "$ne": datetime,
+        "$lt": datetime,
+        "$lte": datetime,
+        "$gt": datetime,
+        "$gte": datetime,
+        "$in": list[datetime],
+    },
+    total=False,
+)
 
 
 class CamelCaseModel(BaseModel):

@@ -40,11 +40,14 @@ class PetController(IController):
         async def query(
             query: Annotated[PetQueryParams, Query()],
         ) -> CommonQueryResponse[Pet]:
+            filter = query.filter
             page = query.page
             offset = page.offset
             limit = page.limit
-            count = await self._pet_service.count()
-            pets = await self._pet_service.query(offset=offset, limit=limit)
+            count = await self._pet_service.count(filter=filter)
+            pets = await self._pet_service.query(
+                filter=filter, offset=offset, limit=limit
+            )
             return {
                 "meta": {"offset": offset, "limit": limit, "total": count},
                 "data": pets,

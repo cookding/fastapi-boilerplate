@@ -14,7 +14,7 @@ class PetRecord(Model):
     created_at = DatetimeField(auto_now_add=True)
     updated_at = DatetimeField(auto_now=True)
 
-    def json(self) -> Pet:
+    def to_entity(self) -> Pet:
         return Pet(
             id=self.id,
             name=self.name,

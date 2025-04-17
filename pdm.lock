@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:42845ea09dd3d5b9648f08f57327b219a92ded230b664d3803685f37a00498ad"
+content_hash = "sha256:449f1de9a31397f001c957f622a742d7c36980fdc80ce011cfe5097156ebe8dc"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -486,6 +486,16 @@ dependencies = [
 ]
 files = [
     {file = "jinja2-3.1.6-py3-none-any.whl", hash = "sha256:85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67"},
+]
+
+[[package]]
+name = "json2q"
+version = "0.1.2"
+requires_python = ">=3.12"
+summary = "Convert JSON filters to Q expression"
+groups = ["default"]
+files = [
+    {file = "json2q-0.1.2-py3-none-any.whl", hash = "sha256:64db7b8efd0771bc24c8419828f3ce5217730dc553cae62c754f9f117772ae71"},
 ]
 
 [[package]]

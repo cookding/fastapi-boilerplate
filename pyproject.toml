@@ -11,6 +11,7 @@ dependencies = [
     "qs-codec>=1.1.1",
     "tortoise-orm[asyncpg]>=0.24.2",
     "aerich[toml]>=0.8.2",
+    "json2q>=0.1.2",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"
