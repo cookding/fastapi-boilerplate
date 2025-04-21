@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:ec7543b71de6dfdd2bc299d6ca7c68f0fa816056d3f888c9ddd8947377be6936"
+content_hash = "sha256:f1ae549c15bb8ca9fa14edba476b9bf10a25c651994deb9e0655ff894896de74"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -490,12 +490,12 @@ files = [
 
 [[package]]
 name = "json2q"
-version = "0.2.0"
+version = "0.3.0"
 requires_python = ">=3.12"
 summary = "Convert JSON filters to Q expression"
 groups = ["default"]
 files = [
-    {file = "json2q-0.2.0-py3-none-any.whl", hash = "sha256:81e7c643fa87ff5487c2406dac080e7c9fc2ed6aa4c188240ab90d13dff87197"},
+    {file = "json2q-0.3.0-py3-none-any.whl", hash = "sha256:037d9a58d7fdb146263369380c5209a0563dcb93fd18dde2164be7fc3c5ecdb8"},
 ]
 
 [[package]]
