@@ -29,9 +29,9 @@ class PetController(IController):
     def register_routers(self, router: APIRouter) -> None:
         @router.post("/api/pets")
         async def create(
-            body: Annotated[PetCreateInput, Body()],
+            input: Annotated[PetCreateInput, Body()],
         ) -> CommonResponseData[Pet]:
-            pet = await self._pet_service.create(body)
+            pet = await self._pet_service.create(input)
             return {
                 "data": pet,
             }
