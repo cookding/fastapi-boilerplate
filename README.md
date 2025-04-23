@@ -49,10 +49,13 @@ $ pdm run db-down
 
 ```bash
 # update the model in code
+# update models list in `DataService.models` in `src/app/data/data_service.py`
 
 # generate migration script
 $ pdm run migrate-dev-create
 # adjust the migration script in `src/app/migrations/models/`
+# or
+# manually create migration script in `src/app/migrations/models/`
 
 # apply the migration scripts
 $ pdm run migrate-deploy
