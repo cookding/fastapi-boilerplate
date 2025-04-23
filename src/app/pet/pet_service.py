@@ -27,7 +27,12 @@ class PetService:
     async def query(self, filter: PetWhereInput, offset: int, limit: int) -> list[Pet]:
         self._logger.info("querying pets")
         q = json2q.to_q(filter.to_dict(), Q)
-        pets = await PetRecord.filter(q).offset(offset).limit(limit)
+        pets = (
+            await PetRecord.filter(q)
+            .order_by("-created_at", "id")
+            .offset(offset)
+            .limit(limit)
+        )
         return [pet.to_entity() for pet in pets]
 
     async def delete(self, id: str) -> None:
