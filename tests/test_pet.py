@@ -9,7 +9,6 @@ from tests.app_manager import AppManager
 
 @pytest.mark.anyio
 async def test_create_pets(app: FastAPI, client: AsyncClient, app_manager: AppManager):
-    await app_manager.reset_data()
     name: str = str(uuid4())[0:10]
     avatar_url: str | None = "https://example.com/avatar.png"
 
@@ -50,7 +49,6 @@ async def test_create_pets(app: FastAPI, client: AsyncClient, app_manager: AppMa
 async def test_create_pets_validation(
     app: FastAPI, client: AsyncClient, app_manager: AppManager
 ):
-    await app_manager.reset_data()
     name: str = str(uuid4())[0:30]
 
     res: Response = await client.post(
@@ -83,7 +81,6 @@ async def test_create_pets_validation(
 
 @pytest.mark.anyio
 async def test_query_pets(app: FastAPI, client: AsyncClient, app_manager: AppManager):
-    await app_manager.reset_data()
     for _ in range(3):
         name: str = str(uuid4())[0:10]
         res: Response = await client.post(
@@ -125,7 +122,6 @@ async def test_query_pets(app: FastAPI, client: AsyncClient, app_manager: AppMan
 async def test_query_pets_with_filter(
     app: FastAPI, client: AsyncClient, app_manager: AppManager
 ):
-    await app_manager.reset_data()
     for _ in range(3):
         name: str = str(uuid4())[0:10]
         res: Response = await client.post(
@@ -165,6 +161,47 @@ async def test_query_pets_with_filter(
     assert res.status_code == 200
     assert len(res.json().get("data")) == 1
     assert res.json().get("data")[0]["id"] == pets[0]["id"]
+
+
+@pytest.mark.anyio
+async def test_query_pets_with_fields(
+    app: FastAPI, client: AsyncClient, app_manager: AppManager
+):
+    for _ in range(3):
+        name: str = str(uuid4())[0:10]
+        res: Response = await client.post(
+            "/api/pets",
+            json={"name": name},
+        )
+
+    res: Response = await client.get(
+        "/api/pets",
+    )
+
+    assert res.status_code == 200
+    assert len(res.json().get("data")) == 3
+    pets = res.json().get("data")
+    for pet in pets:
+        assert "id" in pet
+        assert "name" in pet
+        assert "avatarUrl" in pet
+        assert "createdAt" in pet
+        assert "updatedAt" in pet
+
+    res: Response = await client.get(
+        "/api/pets",
+        params=f"fields[0]=id&fields[1]=name",
+    )
+
+    assert res.status_code == 200
+    assert len(res.json().get("data")) == 3
+    pets = res.json().get("data")
+    for pet in pets:
+        assert "id" in pet
+        assert "name" in pet
+        assert "avatarUrl" not in pet
+        assert "createdAt" not in pet
+        assert "updatedAt" not in pet
 
 
 @pytest.mark.anyio
@@ -210,7 +247,6 @@ async def test_query_pets_validation(
 
 @pytest.mark.anyio
 async def test_delete_pets(app: FastAPI, client: AsyncClient, app_manager: AppManager):
-    await app_manager.reset_data()
     name: str = str(uuid4())[0:10]
     res: Response = await client.post(
         "/api/pets",

@@ -9,7 +9,7 @@ from app.common.common_schema import (
 from app.common.interface.icontroller import IController
 from app.logging.logger import Logger
 from app.logging.logging_service import LoggingService
-from app.pet.pet_schema import Pet, PetCreateInput, PetQueryParams
+from app.pet.pet_schema import PartialPet, Pet, PetCreateInput, PetQueryParams
 from app.pet.pet_service import PetService
 
 
@@ -36,10 +36,11 @@ class PetController(IController):
                 "data": pet,
             }
 
-        @router.get("/api/pets")
+        @router.get("/api/pets", response_model_exclude_unset=True)
         async def query(
             query: Annotated[PetQueryParams, Query()],
-        ) -> CommonQueryResponse[Pet]:
+        ) -> CommonQueryResponse[PartialPet]:
+            fields = query.fields
             filter = query.filter
             page = query.page
             offset = page.offset
@@ -50,7 +51,7 @@ class PetController(IController):
             )
             return {
                 "meta": {"offset": offset, "limit": limit, "total": count},
-                "data": pets,
+                "data": [pet.to_partial(fields) for pet in pets],
             }
 
         @router.delete("/api/pets/{id}")

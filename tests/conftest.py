@@ -27,6 +27,7 @@ async def client(app):
 
 
 @pytest.fixture
-def app_manager(app, client):
+async def app_manager(app, client):
     manager = AppManager(app, client)
+    await manager.reset_data()
     yield manager

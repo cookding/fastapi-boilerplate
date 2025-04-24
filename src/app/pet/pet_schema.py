@@ -6,10 +6,18 @@ from pydantic import Field, model_validator
 
 from app.common.common_schema import (
     CamelCaseModel,
+    CommonQueryParams,
     DateTimeFilter,
-    PaginationQueryParams,
     StringFilter,
 )
+
+
+class PartialPet(CamelCaseModel):
+    id: Annotated[str | None, Field()] = None
+    name: Annotated[str | None, Field()] = None
+    avatar_url: Annotated[str | None, Field()] = None
+    created_at: Annotated[datetime | None, Field()] = None
+    updated_at: Annotated[datetime | None, Field()] = None
 
 
 class Pet(CamelCaseModel):
@@ -18,6 +26,10 @@ class Pet(CamelCaseModel):
     avatar_url: Annotated[str | None, Field()]
     created_at: Annotated[datetime, Field()]
     updated_at: Annotated[datetime, Field()]
+
+    def to_partial(self, fields: list[str]) -> PartialPet:
+        include = None if (fields is None or len(fields) == 0) else set(fields)
+        return PartialPet(**self.model_dump(include=include))
 
 
 class PetCreateInput(CamelCaseModel):
@@ -30,17 +42,9 @@ class PetWhereInput(CamelCaseModel):
     created_at: Annotated[DateTimeFilter | None, Field(default=None)]
     updated_at: Annotated[DateTimeFilter | None, Field(default=None)]
 
-    @model_validator(mode="before")
-    @classmethod
-    def transform(cls, data: Any) -> Any:
-        if isinstance(data, str):
-            return json.loads(data)
-        return data
-
     def to_dict(self) -> dict[str, Any]:
         return self.model_dump(exclude_none=True)
 
 
-class PetQueryParams(CamelCaseModel):
+class PetQueryParams(CommonQueryParams):
     filter: Annotated[PetWhereInput, Field(default={})]
-    page: Annotated[PaginationQueryParams, Field(default=PaginationQueryParams())]
