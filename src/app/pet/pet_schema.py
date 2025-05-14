@@ -1,8 +1,7 @@
-import json
 from datetime import datetime
 from typing import Annotated, Any
 
-from pydantic import Field, model_validator
+from pydantic import Field
 
 from app.common.common_schema import (
     CamelCaseModel,

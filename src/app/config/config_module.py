@@ -1,26 +1,24 @@
 from typing import override
 
-from punq import Container, Scope
-
 from app.common.interface.imodule import IModule
 from app.config.config_service import ConfigService
 
 
 class ConfigModule(IModule):
     @override
-    def resolve(self, container: Container) -> None:
+    def setup(self) -> None:
         config_service = ConfigService()
-        self.container.register(
+        self.provide_item(
             ConfigService,
-            instance=config_service,
-            scope=Scope.singleton,
+            config_service,
         )
 
-    @override
-    def register_exports(self, container: Container) -> None:
-        config_service = self.container.resolve(ConfigService)
-        container.register(
+        # export
+        self.export_item(
+            ConfigModule,
+            self,
+        )
+        self.export_item(
             ConfigService,
-            instance=config_service,
-            scope=Scope.singleton,
+            config_service,
         )

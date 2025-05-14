@@ -1,7 +1,5 @@
 from typing import override
 
-from punq import Container, Scope
-
 from app.common.interface.icontroller import IController
 from app.common.interface.imodule import IModule
 from app.health.health_check_manager import UNHEALTHY, HealthCheckManager
@@ -11,7 +9,7 @@ from app.pet.pet_record import PetRecord
 
 class HealthModule(IModule):
     @override
-    def resolve(self, container: Container) -> None:
+    def setup(self) -> None:
         async def check_database() -> None:
             await PetRecord.first()
 
@@ -21,26 +19,25 @@ class HealthModule(IModule):
             name="postgres",
             failure_status=UNHEALTHY,
         )
-        self.container.register(
+        self.provide_item(
             HealthCheckManager,
-            instance=health_check_manager,
-            scope=Scope.singleton,
+            health_check_manager,
         )
 
         health_controller = HealthController(
             health_check_manager=health_check_manager,
         )
-        self.container.register(
+        self.provide_item(
             HealthController,
-            instance=health_controller,
-            scope=Scope.singleton,
+            health_controller,
         )
 
-    @override
-    def register_exports(self, container: Container) -> None:
-        health_controller = self.container.resolve(HealthController)
-        container.register(
+        # export
+        self.export_item(
+            HealthModule,
+            self,
+        )
+        self.export_item(
             IController,
-            instance=health_controller,
-            scope=Scope.singleton,
+            health_controller,
         )

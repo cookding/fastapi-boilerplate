@@ -1,7 +1,5 @@
 from typing import override
 
-from punq import Container, Scope
-
 from app.common.interface.icontroller import IController
 from app.common.interface.iexception_handler import IExceptionHandler
 from app.common.interface.ihttp_middleware import IHttpMiddleware
@@ -20,82 +18,85 @@ from app.logging.logging_service import LoggingService
 
 class GeneralModule(IModule):
     @override
-    def resolve(self, container: Container) -> None:
-        config_service: ConfigService = container.resolve(ConfigService)
-        logging_service: LoggingService = container.resolve(LoggingService)
+    def setup(self) -> None:
+        config_service = self.import_item(ConfigService)
+        logging_service = self.import_item(LoggingService)
 
+        # service
         general_service = GeneralService(
             logging_service=logging_service,
         )
-        self.container.register(
+        self.provide_item(
             GeneralService,
-            instance=general_service,
-            scope=Scope.singleton,
+            general_service,
         )
 
+        # controller
         general_controller = GeneralController(
             logging_service=logging_service,
             general_service=general_service,
         )
-        self.container.register(
+        self.provide_item(
             GeneralController,
-            instance=general_controller,
-            scope=Scope.singleton,
+            general_controller,
         )
 
-        logging_middleware = LogAccessMiddleware(
+        # middleware
+        log_access_middleware = LogAccessMiddleware(
             excludes=config_service.config.log_access_excludes,
             logging_service=logging_service,
         )
-        self.container.register(
+        self.provide_item(
             LogAccessMiddleware,
-            instance=logging_middleware,
-            scope=Scope.singleton,
+            log_access_middleware,
         )
 
+        # exception handler
         request_validation_exception_handler = RequestValidationExceptionHandler(
             logging_service
         )
-        self.container.register(
-            IExceptionHandler,
-            instance=request_validation_exception_handler,
-            scope=Scope.singleton,
+        self.provide_item(
+            RequestValidationExceptionHandler,
+            request_validation_exception_handler,
         )
         not_implemented_exception_handler = NotImplementedExceptionHandler(
             logging_service
         )
-        self.container.register(
-            IExceptionHandler,
-            instance=not_implemented_exception_handler,
-            scope=Scope.singleton,
+        self.provide_item(
+            NotImplementedExceptionHandler,
+            not_implemented_exception_handler,
         )
         unknown_exception_handler = UnknownExceptionHandler(logging_service)
-        self.container.register(
-            IExceptionHandler,
-            instance=unknown_exception_handler,
-            scope=Scope.singleton,
+        self.provide_item(
+            UnknownExceptionHandler,
+            unknown_exception_handler,
         )
 
-    @override
-    def register_exports(self, container: Container) -> None:
-        general_controller = self.container.resolve(GeneralController)
-        container.register(
+        # export
+        self.export_item(
+            GeneralModule,
+            self,
+        )
+        ## controller
+        self.export_item(
             IController,
-            instance=general_controller,
-            scope=Scope.singleton,
+            general_controller,
         )
-
-        logging_middleware = self.container.resolve(LogAccessMiddleware)
-        container.register(
+        ## middleware
+        self.export_item(
             IHttpMiddleware,
-            instance=logging_middleware,
-            scope=Scope.singleton,
+            log_access_middleware,
         )
-
-        exception_handlers = self.container.resolve_all(IExceptionHandler)
-        for exception_handler in exception_handlers:
-            container.register(
-                IExceptionHandler,
-                instance=exception_handler,
-                scope=Scope.singleton,
-            )
+        ## exception handler
+        self.export_item(
+            IExceptionHandler,
+            request_validation_exception_handler,
+        )
+        self.export_item(
+            IExceptionHandler,
+            not_implemented_exception_handler,
+        )
+        self.export_item(
+            IExceptionHandler,
+            unknown_exception_handler,
+        )

@@ -4,7 +4,7 @@ from typing import Any, AsyncGenerator
 import sentry_sdk
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from punq import Container, Scope
+from punq import Container
 from sentry_sdk.types import Event, Hint
 
 from app.common.common_api_route import CommonAPIRoute
@@ -25,21 +25,15 @@ from app.pet.pet_module import PetModule
 
 def setup_modules(container: Container) -> None:
     modules: list[IModule] = [
-        ConfigModule(),
-        LoggingModule(),
-        DataModule(),
-        GeneralModule(),
-        HealthModule(),
-        PetModule(),
+        ConfigModule(container),
+        LoggingModule(container),
+        DataModule(container),
+        GeneralModule(container),
+        HealthModule(container),
+        PetModule(container),
     ]
     for module in modules:
-        container.register(
-            module.__class__,
-            instance=module,
-            scope=Scope.singleton,
-        )
-        module.resolve(container)
-        module.register_exports(container)
+        module.setup()
 
 
 def setup_sentry(container: Container) -> None:
@@ -72,10 +66,10 @@ def setup_sentry(container: Container) -> None:
         logger.info("Sentry DSN is not provided")
 
 
-def setup_app(app: FastAPI) -> None:
+def setup_app(container: Container) -> FastAPI:
+    app = FastAPI(openapi_url=None, lifespan=lifespan)
+    app.state.container = container
     app.router.route_class = CommonAPIRoute
-
-    container: Container = app.state.container
 
     controllers: list[IController] = container.resolve_all(IController)
     for controller in controllers:
@@ -92,6 +86,8 @@ def setup_app(app: FastAPI) -> None:
     http_middlewares: list[IHttpMiddleware] = container.resolve_all(IHttpMiddleware)
     for http_middleware in http_middlewares:
         app.middleware("http")(http_middleware.dispatch)
+
+    return app
 
 
 @asynccontextmanager
@@ -111,8 +107,6 @@ def setup() -> FastAPI:
 
     setup_modules(container)
     setup_sentry(container)
-    app = FastAPI(openapi_url=None, lifespan=lifespan)
-    app.state.container = container
-    setup_app(app)
+    app = setup_app(container)
 
     return app

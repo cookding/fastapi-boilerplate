@@ -1,7 +1,5 @@
 from typing import override
 
-from punq import Container, Scope
-
 from app.common.interface.imodule import IModule
 from app.config.config_service import ConfigService
 from app.logging.logging_service import LoggingService
@@ -9,24 +7,24 @@ from app.logging.logging_service import LoggingService
 
 class LoggingModule(IModule):
     @override
-    def resolve(self, container: Container) -> None:
-        config_service: ConfigService = container.resolve(ConfigService)
+    def setup(self) -> None:
+        config_service = self.import_item(ConfigService)
         logging_service = LoggingService(
             app_name=config_service.config.app_name,
             log_format=config_service.config.log_format,
             log_level=config_service.config.log_level,
         )
-        self.container.register(
+        self.provide_item(
             LoggingService,
-            instance=logging_service,
-            scope=Scope.singleton,
+            logging_service,
         )
 
-    @override
-    def register_exports(self, container: Container) -> None:
-        logging_service = self.container.resolve(LoggingService)
-        container.register(
+        # export
+        self.export_item(
+            LoggingModule,
+            self,
+        )
+        self.export_item(
             LoggingService,
-            instance=logging_service,
-            scope=Scope.singleton,
+            logging_service,
         )
