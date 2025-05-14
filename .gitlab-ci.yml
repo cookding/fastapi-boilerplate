@@ -43,16 +43,16 @@ release_job:
   before_script:
     - docker info
   script:
-    - docker login -u $CI_DOCKER_REGISTRY_USERNAME -p $CI_DOCKER_REGISTRY_PASSWORD $CI_DOCKER_REGISTRY
-    - docker pull $CI_DOCKER_REGISTRY/cookding/foundation/fastapi-boilerplate:latest || true
+    - docker login -u $COOKDING_REGISTRY_USERNAME -p $COOKDING_REGISTRY_PASSWORD $COOKDING_REGISTRY
+    - docker pull $COOKDING_REGISTRY/cookding/fastapi-boilerplate:latest || true
     - |
-      docker build --cache-from $CI_DOCKER_REGISTRY/cookding/foundation/fastapi-boilerplate:latest \
+      docker build --cache-from $COOKDING_REGISTRY/cookding/fastapi-boilerplate:latest \
       --build-arg APT_DEBIAN_MIRROR_HOST=${APT_DEBIAN_MIRROR_HOST} \
       --build-arg PIP_INDEX_URL=${PIP_INDEX_URL} \
       --build-arg PDM_PYPI_URL=${PDM_PYPI_URL} \
       --build-arg PDM_PYPI_USERNAME=${PDM_PYPI_USERNAME} \
       --build-arg PDM_PYPI_PASSWORD=${PDM_PYPI_PASSWORD} \
-      --tag $CI_DOCKER_REGISTRY/cookding/foundation/fastapi-boilerplate:$VERSION .
-    - docker push $CI_DOCKER_REGISTRY/cookding/foundation/fastapi-boilerplate:$VERSION
-    - docker tag $CI_DOCKER_REGISTRY/cookding/foundation/fastapi-boilerplate:$VERSION $CI_DOCKER_REGISTRY/cookding/foundation/fastapi-boilerplate:latest
-    - docker push $CI_DOCKER_REGISTRY/cookding/foundation/fastapi-boilerplate:latest
+      --tag $COOKDING_REGISTRY/cookding/fastapi-boilerplate:$VERSION .
+    - docker push $COOKDING_REGISTRY/cookding/fastapi-boilerplate:$VERSION
+    - docker tag $COOKDING_REGISTRY/cookding/fastapi-boilerplate:$VERSION $COOKDING_REGISTRY/cookding/fastapi-boilerplate:latest
+    - docker push $COOKDING_REGISTRY/cookding/fastapi-boilerplate:latest
