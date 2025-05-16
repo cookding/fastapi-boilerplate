@@ -3,15 +3,17 @@ from typing import Any, AsyncGenerator
 
 import sentry_sdk
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from punq import Container
 from sentry_sdk.types import Event, Hint
 
+from app.account.account_module import AccountModule
 from app.common.common_api_route import CommonAPIRoute
 from app.common.interface.icontroller import IController
 from app.common.interface.iexception_handler import IExceptionHandler
 from app.common.interface.ihttp_middleware import IHttpMiddleware
 from app.common.interface.imodule import IModule
+from app.common.interface.iroute_guard import IRouteGuard
 from app.config.config_module import ConfigModule
 from app.config.config_service import ConfigService
 from app.data.data_module import DataModule
@@ -30,6 +32,7 @@ def setup_modules(container: Container) -> None:
         DataModule(container),
         GeneralModule(container),
         HealthModule(container),
+        AccountModule(container),
         PetModule(container),
     ]
     for module in modules:
@@ -67,7 +70,12 @@ def setup_sentry(container: Container) -> None:
 
 
 def setup_app(container: Container) -> FastAPI:
-    app = FastAPI(openapi_url=None, lifespan=lifespan)
+    route_guards: list[IRouteGuard] = container.resolve_all(IRouteGuard)
+    app = FastAPI(
+        openapi_url=None,
+        lifespan=lifespan,
+        dependencies=[Depends(route_guard.guard) for route_guard in route_guards],
+    )
     app.state.container = container
     app.router.route_class = CommonAPIRoute
 

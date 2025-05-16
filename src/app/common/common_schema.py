@@ -1,6 +1,7 @@
 import json
 import re
 from datetime import datetime
+from enum import StrEnum
 from typing import (
     Annotated,
     Any,
@@ -110,3 +111,16 @@ class CommonQueryResponseMeta(TypedDict):
 class CommonQueryResponse(TypedDict, Generic[T]):
     meta: CommonQueryResponseMeta
     data: list[T]
+
+
+class JWTAudience(StrEnum):
+    TOKEN_REFRESH = "TOKEN_REFRESH"
+    API_ACCESS = "API_ACCESS"
+
+
+class JWTTokenPayload(CamelCaseModel):
+    jti: Annotated[str, Field()]
+    sub: Annotated[str, Field()]
+    aud: Annotated[str, Field()]
+    iat: Annotated[datetime, Field()]
+    exp: Annotated[datetime, Field()]

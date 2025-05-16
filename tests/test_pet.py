@@ -9,11 +9,16 @@ from tests.app_manager import AppManager
 
 @pytest.mark.anyio
 async def test_create_pets(app: FastAPI, client: AsyncClient, app_manager: AppManager):
+    access_token = app_manager.generate_access_token()
     name: str = str(uuid4())[0:10]
     avatar_url: str | None = "https://example.com/avatar.png"
 
     res: Response = await client.post(
-        "/api/pets", json={"name": name, "avatarUrl": avatar_url}
+        "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
+        json={"name": name, "avatarUrl": avatar_url},
     )
 
     assert res.status_code == 200
@@ -23,7 +28,13 @@ async def test_create_pets(app: FastAPI, client: AsyncClient, app_manager: AppMa
     assert res.json()["data"]["createdAt"] is not None
     assert res.json()["data"]["updatedAt"] is not None
     pet = res.json()["data"]
-    res = await client.get("/api/pets")
+
+    res = await client.get(
+        "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
+    )
     assert res.status_code == 200
     assert res.json()["meta"]["total"] == 1
     assert pet in res.json()["data"]
@@ -32,14 +43,23 @@ async def test_create_pets(app: FastAPI, client: AsyncClient, app_manager: AppMa
     avatar_url: str | None = None
 
     res: Response = await client.post(
-        "/api/pets", json={"name": name, "avatarUrl": avatar_url}
+        "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
+        json={"name": name, "avatarUrl": avatar_url},
     )
 
     assert res.status_code == 200
     assert res.json()["data"]["name"] == name
     assert res.json()["data"]["avatarUrl"] == avatar_url
     pet = res.json()["data"]
-    res = await client.get("/api/pets")
+    res = await client.get(
+        "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
+    )
     assert res.status_code == 200
     assert res.json()["meta"]["total"] == 2
     assert pet in res.json()["data"]
@@ -49,10 +69,14 @@ async def test_create_pets(app: FastAPI, client: AsyncClient, app_manager: AppMa
 async def test_create_pets_validation(
     app: FastAPI, client: AsyncClient, app_manager: AppManager
 ):
+    access_token = app_manager.generate_access_token()
     name: str = str(uuid4())[0:30]
 
     res: Response = await client.post(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
         json={"name": name},
     )
 
@@ -68,6 +92,9 @@ async def test_create_pets_validation(
 
     res: Response = await client.post(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
         json={"name": name, "avatarUrl": avatar_url},
     )
 
@@ -78,18 +105,37 @@ async def test_create_pets_validation(
     assert errors[0]["loc"] == ["body", "avatarUrl"]
     assert errors[0]["type"] == "string_too_long"
 
+    name: str = str(uuid4())[0:10]
+    avatar_url: str = "https://example.com/avatar.png"
+
+    res: Response = await client.post(
+        "/api/pets",
+        json={"name": name, "avatarUrl": avatar_url},
+    )
+
+    assert res.status_code == 403
+    assert res.json().get("data") is None
+    assert res.json()["error"]["code"] == "FORBIDDEN_ERROR"
+
 
 @pytest.mark.anyio
 async def test_query_pets(app: FastAPI, client: AsyncClient, app_manager: AppManager):
+    access_token = app_manager.generate_access_token()
     for _ in range(3):
         name: str = str(uuid4())[0:10]
         res: Response = await client.post(
             "/api/pets",
+            headers={
+                "Authorization": f"Bearer {access_token}",
+            },
             json={"name": name},
         )
 
     res: Response = await client.get(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
     )
 
     assert res.status_code == 200
@@ -99,6 +145,9 @@ async def test_query_pets(app: FastAPI, client: AsyncClient, app_manager: AppMan
 
     res: Response = await client.get(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
         params="page[offset]=1&page[limit]=10",
     )
 
@@ -109,6 +158,9 @@ async def test_query_pets(app: FastAPI, client: AsyncClient, app_manager: AppMan
 
     res: Response = await client.get(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
         params="page[offset]=0&page[limit]=1",
     )
 
@@ -122,21 +174,31 @@ async def test_query_pets(app: FastAPI, client: AsyncClient, app_manager: AppMan
 async def test_query_pets_with_filter(
     app: FastAPI, client: AsyncClient, app_manager: AppManager
 ):
+    access_token = app_manager.generate_access_token()
     for _ in range(3):
         name: str = str(uuid4())[0:10]
         res: Response = await client.post(
             "/api/pets",
+            headers={
+                "Authorization": f"Bearer {access_token}",
+            },
             json={"name": name},
         )
 
     res: Response = await client.get(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
     )
 
     pets = res.json().get("data")
 
     res: Response = await client.get(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
         params=f"filter[name][$eq]={pets[0]['name']}",
     )
 
@@ -146,6 +208,9 @@ async def test_query_pets_with_filter(
 
     res: Response = await client.get(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
         params=f"filter[createdAt][$eq]={pets[0]['createdAt']}",
     )
 
@@ -155,6 +220,9 @@ async def test_query_pets_with_filter(
 
     res: Response = await client.get(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
         params=f"filter[updatedAt][$eq]={pets[0]['updatedAt']}",
     )
 
@@ -167,15 +235,22 @@ async def test_query_pets_with_filter(
 async def test_query_pets_with_fields(
     app: FastAPI, client: AsyncClient, app_manager: AppManager
 ):
+    access_token = app_manager.generate_access_token()
     for _ in range(3):
         name: str = str(uuid4())[0:10]
         res: Response = await client.post(
             "/api/pets",
+            headers={
+                "Authorization": f"Bearer {access_token}",
+            },
             json={"name": name},
         )
 
     res: Response = await client.get(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
     )
 
     assert res.status_code == 200
@@ -190,6 +265,9 @@ async def test_query_pets_with_fields(
 
     res: Response = await client.get(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
         params=f"fields[0]=id&fields[1]=name",
     )
 
@@ -208,8 +286,12 @@ async def test_query_pets_with_fields(
 async def test_query_pets_validation(
     app: FastAPI, client: AsyncClient, app_manager: AppManager
 ):
+    access_token = app_manager.generate_access_token()
     res: Response = await client.get(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
         params="page[offset]=-1&page[limit]=1",
     )
 
@@ -222,6 +304,9 @@ async def test_query_pets_validation(
 
     res: Response = await client.get(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
         params="page[offset]=0&page[limit]=-1",
     )
 
@@ -234,6 +319,9 @@ async def test_query_pets_validation(
 
     res: Response = await client.get(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
         params="page=offset:0,limit:1",
     )
 
@@ -244,20 +332,50 @@ async def test_query_pets_validation(
     assert errors[0]["loc"] == ["query", "page"]
     assert errors[0]["type"] is not None
 
+    res: Response = await client.get(
+        "/api/pets",
+    )
+
+    assert res.status_code == 403
+    assert res.json().get("data") is None
+    assert res.json()["error"]["code"] == "FORBIDDEN_ERROR"
+
 
 @pytest.mark.anyio
 async def test_delete_pets(app: FastAPI, client: AsyncClient, app_manager: AppManager):
+    access_token = app_manager.generate_access_token()
     name: str = str(uuid4())[0:10]
     res: Response = await client.post(
         "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
         json={"name": name},
     )
     pet = res.json()["data"]
 
-    res = await client.delete(f"/api/pets/{pet['id']}")
+    res = await client.delete(
+        f"/api/pets/{pet['id']}",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
+    )
 
     assert res.status_code == 200
     assert res.json()["data"] is None
-    res = await client.get("/api/pets")
+    res = await client.get(
+        "/api/pets",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+        },
+    )
     assert res.status_code == 200
     assert pet not in res.json()["data"]
+
+    res = await client.delete(
+        f"/api/pets/{uuid4().hex}",
+    )
+
+    assert res.status_code == 403
+    assert res.json().get("data") is None
+    assert res.json()["error"]["code"] == "FORBIDDEN_ERROR"

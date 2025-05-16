@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SecretStr
 
 
 class Config(BaseModel):
@@ -17,3 +17,11 @@ class Config(BaseModel):
     sentry_send_default_pii: Annotated[bool, Field()]
     sentry_traces_sample_rate: Annotated[float, Field(ge=0.0, le=1.0)]
     database_url: Annotated[str, Field(min_length=1)]
+    admin_username: Annotated[str, Field()]
+    admin_password: Annotated[SecretStr, Field()]
+    jwt_iss: Annotated[str, Field()]
+    jwt_signing_algorithm: Annotated[str, Field()]
+    jwt_private_key: Annotated[SecretStr, Field()]
+    jwt_public_key: Annotated[str, Field()]
+    jwt_access_token_expires_in_sec: Annotated[int, Field()]
+    jwt_refresh_token_expires_in_sec: Annotated[int, Field()]

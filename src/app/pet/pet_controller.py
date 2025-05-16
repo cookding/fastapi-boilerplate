@@ -2,9 +2,11 @@ from typing import Annotated, override
 
 from fastapi import APIRouter, Body, Path, Query
 
+from app.common.common_decorator import requires_auth
 from app.common.common_schema import (
     CommonQueryResponse,
     CommonResponseData,
+    JWTAudience,
 )
 from app.common.interface.icontroller import IController
 from app.logging.logger import Logger
@@ -28,6 +30,7 @@ class PetController(IController):
     @override
     def register_routers(self, router: APIRouter) -> None:
         @router.post("/api/pets")
+        @requires_auth([JWTAudience.API_ACCESS])
         async def create(
             input: Annotated[PetCreateInput, Body()],
         ) -> CommonResponseData[Pet]:
@@ -37,6 +40,7 @@ class PetController(IController):
             }
 
         @router.get("/api/pets", response_model_exclude_unset=True)
+        @requires_auth([JWTAudience.API_ACCESS])
         async def query(
             query: Annotated[PetQueryParams, Query()],
         ) -> CommonQueryResponse[PartialPet]:
@@ -55,6 +59,7 @@ class PetController(IController):
             }
 
         @router.delete("/api/pets/{id}")
+        @requires_auth([JWTAudience.API_ACCESS])
         async def delete(
             id: Annotated[str, Path(title="The ID of the pet to delete")],
         ) -> CommonResponseData[None]:

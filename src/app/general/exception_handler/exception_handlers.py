@@ -5,16 +5,49 @@ from fastapi import Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from pydantic import ValidationError
 
 from app.common.errors import (
-    NOT_IMPLEMENTED_ERROR,
     UNKNOWN_ERROR,
     VALIDATION_ERROR,
     ResponseError,
 )
+from app.common.exceptions import CommonException
 from app.common.interface.iexception_handler import IExceptionHandler
 from app.logging.logger import Logger
 from app.logging.logging_service import LoggingService
+
+
+class CommonExceptionHandler(IExceptionHandler[CommonException]):
+    _logger: Logger
+
+    def __init__(self, logging_service: LoggingService) -> None:
+        self._logger = logging_service.get_logger(__name__)
+
+    @override
+    def get_handle_class(self) -> type[CommonException]:
+        return CommonException
+
+    @override
+    async def handle(
+        self,
+        request: Request,
+        exc: CommonException,
+    ) -> JSONResponse:
+        exc.log_exception(self._logger)
+        return JSONResponse(
+            status_code=exc.response_error.status_code,
+            content=jsonable_encoder(
+                {
+                    "error": {
+                        "code": exc.response_error.code,
+                        "message": exc.response_error.message,
+                        "extra": exc.get_response_body_extra(),
+                    },
+                }
+            ),
+        )
+
 
 T = TypeVar("T")
 
@@ -85,17 +118,21 @@ class RequestValidationExceptionHandler(
         return exc.errors()
 
 
-class NotImplementedExceptionHandler(AbstractExceptionHandler[NotImplementedError]):
+class ValidationExceptionHandler(AbstractExceptionHandler[ValidationError]):
     def __init__(self, logging_service: LoggingService):
         super().__init__(
             logging_service,
-            NotImplementedError,
-            NOT_IMPLEMENTED_ERROR,
+            ValidationError,
+            VALIDATION_ERROR,
         )
 
     @override
-    def _log_exception(self, exc: NotImplementedError) -> None:
-        return self._logger.opt(exception=exc).error("not implemented")
+    def _log_exception(self, exc: ValidationError) -> None:
+        return self._logger.opt(exception=exc).warning("validation error")
+
+    @override
+    def _get_response_body_extra(self, exc: ValidationError) -> Any:
+        return exc.errors()
 
 
 class UnknownExceptionHandler(AbstractExceptionHandler[Exception]):

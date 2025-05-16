@@ -21,6 +21,7 @@ class DataService:
     @property
     def models(self) -> list[str]:
         return [
+            "app.account.auth_record",
             "app.pet.pet_record",
         ]
 

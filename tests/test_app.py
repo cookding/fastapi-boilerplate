@@ -2,6 +2,7 @@ import pytest
 from fastapi import FastAPI, Response
 from httpx import AsyncClient
 
+from app.common.exceptions import NotImplementedException
 from app.general.general_module import GeneralModule
 from app.general.general_service import GeneralService
 
@@ -19,7 +20,7 @@ async def test_not_implemented_error(app: FastAPI, client: AsyncClient):
     general_service: GeneralService = general_module.container.resolve(GeneralService)
 
     async def raise_error():
-        raise NotImplementedError("Not implemented")
+        raise NotImplementedException()
 
     general_service.set_callable(raise_error)
 

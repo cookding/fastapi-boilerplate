@@ -1,6 +1,8 @@
 import os
 import re
 
+from pydantic import SecretStr
+
 from app.config.config_schema import Config
 
 
@@ -33,6 +35,24 @@ class ConfigService:
                     "DATABASE_URL",
                     "postgres://postgres:password@localhost:5432/fastapi_boilerplate?schema=public",
                 ),
+            ),
+            admin_username=os.getenv("ADMIN_USERNAME", "admin"),
+            admin_password=SecretStr(os.getenv("ADMIN_PASSWORD", "password")),
+            jwt_iss=os.getenv("JWT_ISS", "COOK_DING_SAASAAS"),
+            jwt_signing_algorithm=os.getenv("JWT_SIGNING_ALGORITHM", "RS256"),
+            jwt_private_key=SecretStr(
+                bytes.fromhex(
+                    os.getenv("JWT_PRIVATE_KEY_HEX", ""),
+                ).decode()
+            ),
+            jwt_public_key=bytes.fromhex(
+                os.getenv("JWT_PUBLIC_KEY_HEX", ""),
+            ).decode(),
+            jwt_access_token_expires_in_sec=int(
+                os.getenv("JWT_ACCESS_TOKEN_EXPIRES_IN_SEC", "1800")
+            ),
+            jwt_refresh_token_expires_in_sec=int(
+                os.getenv("JWT_REFRESH_TOKEN_EXPIRES_IN_SEC", "604800")
             ),
         )
 
