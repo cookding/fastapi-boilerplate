@@ -15,7 +15,6 @@ from app.general.exception_handler.exception_handlers import (
 from app.general.general_controller import GeneralController
 from app.general.general_service import GeneralService
 from app.general.guard.auth_guard import AuthGuard
-from app.general.middleware.authentication_middleware import AuthenticationMiddleware
 from app.general.middleware.log_access_middleware import LogAccessMiddleware
 from app.logging.logging_service import LoggingService
 
@@ -62,18 +61,11 @@ class GeneralModule(IModule):
             LogAccessMiddleware,
             log_access_middleware,
         )
-        authentication_middleware = AuthenticationMiddleware(
-            logging_service=logging_service,
-            crypto_service=crypto_service,
-        )
-        self.provide_item(
-            AuthenticationMiddleware,
-            authentication_middleware,
-        )
 
         # guard
         auth_guard = AuthGuard(
             logging_service=logging_service,
+            crypto_service=crypto_service,
         )
         self.provide_item(
             AuthGuard,
@@ -120,10 +112,6 @@ class GeneralModule(IModule):
         self.export_item(
             IHttpMiddleware,
             log_access_middleware,
-        )
-        self.export_item(
-            IHttpMiddleware,
-            authentication_middleware,
         )
         ## guard
         self.export_item(

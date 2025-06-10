@@ -6,6 +6,7 @@ import pytest
 from fastapi import FastAPI
 from httpx import AsyncClient
 
+from app.common.common_schema import JWTAudience
 from tests.app_manager import AppManager
 
 
@@ -180,8 +181,17 @@ async def test_auth_cleanup(app: FastAPI, client: AsyncClient, app_manager: AppM
 
     assert res.status_code == 200
 
+    refresh_token = app_manager.generate_updated_jwt_token(
+        access_token,
+        {
+            "aud": JWTAudience.TOKEN_REFRESH,
+        },
+    )
     res = await client.post(
         "/api/auth/cleanup-expired-token",
+        headers={
+            "Authorization": f"Bearer {refresh_token}",
+        },
         json={
             "limit": 100,
         },
@@ -196,6 +206,17 @@ async def test_auth_cleanup(app: FastAPI, client: AsyncClient, app_manager: AppM
         headers={
             "Authorization": f"Bearer {uuid4().hex}",
         },
+        json={
+            "limit": 100,
+        },
+    )
+
+    assert res.status_code == 403
+    assert res.json().get("data") is None
+    assert res.json()["error"]["code"] == "FORBIDDEN_ERROR"
+
+    res = await client.post(
+        "/api/auth/cleanup-expired-token",
         json={
             "limit": 100,
         },

@@ -31,12 +31,15 @@ class CryptoService:
             algorithm=self._config.jwt_signing_algorithm,
         )
 
-    def jwt_verify(self, token: str, audience: str) -> JWTTokenPayload:
+    def jwt_verify(self, token: str, audience: str | None = None) -> JWTTokenPayload:
         payload = jwt.decode(
             jwt=token,
             key=self._config.jwt_public_key,
             algorithms=self._config.jwt_signing_algorithm,
             audience=audience,
+            options={
+                "verify_aud": audience is not None,
+            },
         )
         return JWTTokenPayload(
             **{
