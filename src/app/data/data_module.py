@@ -16,8 +16,10 @@ class DataModule(IModule):
         self.provide_class(
             DataService,
             DataService(
-                config_service=config_service,
                 logging_service=logging_service,
+                options=DataService.DataServiceOptions(
+                    data=config_service.config.data,
+                ),
             ),
         )
 

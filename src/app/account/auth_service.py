@@ -1,8 +1,10 @@
 from datetime import datetime, timedelta, timezone
+from typing import Annotated
 from uuid import uuid4  # TODO: use uuid7 after python 3.14
 
 import jwt
 from json2q import json2q
+from pydantic import BaseModel, Field
 from tortoise.expressions import Q
 
 from app.account.auth_record import RefreshTokenRecord
@@ -17,42 +19,45 @@ from app.common.exceptions import (
     InvalidTokenException,
     UnauthorizedException,
 )
-from app.config.config_schema import Config
-from app.config.config_service import ConfigService
+from app.config.config_schema import JwtConfig, PlatformConfig
 from app.general.crypto_service import CryptoService
 from app.logging.logger import Logger
 from app.logging.logging_service import LoggingService
 
 
 class AuthService:
+    class AuthServiceOptions(BaseModel):
+        platform: Annotated[PlatformConfig, Field()]
+        jwt: Annotated[JwtConfig, Field()]
+
     _logger: Logger
-    _config: Config
     _crypto_service: CryptoService
+    _options: AuthServiceOptions
 
     def __init__(
         self,
         logging_service: LoggingService,
-        config_service: ConfigService,
         crypto_service: CryptoService,
+        options: AuthServiceOptions,
     ) -> None:
         self._logger = logging_service.get_logger(__name__)
-        self._config = config_service.config
         self._crypto_service = crypto_service
+        self._options = options
 
     async def verify(self, input: AuthVerifyInput) -> TokenOutput:
         if not (
-            input.username == self._config.platform.admin_username
+            input.username == self._options.platform.admin_username
             and input.password.get_secret_value()
-            == self._config.platform.admin_password.get_secret_value()
+            == self._options.platform.admin_password.get_secret_value()
         ):
             raise UnauthorizedException()
 
         issued_at = datetime.now(timezone.utc)
         refresh_expires_at = issued_at + timedelta(
-            seconds=self._config.jwt.refresh_token_expires_in_sec
+            seconds=self._options.jwt.refresh_token_expires_in_sec
         )
         access_expires_at = issued_at + timedelta(
-            seconds=self._config.jwt.access_token_expires_in_sec
+            seconds=self._options.jwt.access_token_expires_in_sec
         )
         refresh_token_record = await RefreshTokenRecord.create(
             id=uuid4().hex,
@@ -105,10 +110,10 @@ class AuthService:
 
         issued_at = datetime.now(timezone.utc)
         refresh_expires_at = issued_at + timedelta(
-            seconds=self._config.jwt.refresh_token_expires_in_sec
+            seconds=self._options.jwt.refresh_token_expires_in_sec
         )
         access_expires_at = issued_at + timedelta(
-            seconds=self._config.jwt.access_token_expires_in_sec
+            seconds=self._options.jwt.access_token_expires_in_sec
         )
         refresh_token_record = await RefreshTokenRecord.create(
             id=uuid4().hex,

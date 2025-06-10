@@ -4,11 +4,13 @@ import json
 import logging
 import sys
 from types import FrameType
-from typing import cast, override
+from typing import Annotated, cast, override
 
 import loguru
 from loguru import logger as _logger
+from pydantic import BaseModel, Field
 
+from app.config.config_schema import AppConfig, LogConfig
 from app.logging.logger import Logger
 
 
@@ -34,10 +36,18 @@ class InterceptHandler(logging.Handler):
 
 
 class LoggingService:
+    class LoggingSerivceOptions(BaseModel):
+        app: Annotated[AppConfig, Field()]
+        log: Annotated[LogConfig, Field()]
+
     _handlers: list[loguru.HandlerConfig]
     _logger: loguru.Logger
 
-    def __init__(self, app_name: str, log_format: str, log_level: str) -> None:
+    def __init__(self, options: LoggingSerivceOptions) -> None:
+        app_name = options.app.name
+        log_format = options.log.format
+        log_level = options.log.level
+
         def sink(message: loguru.Message) -> None:
             record: loguru.Record = message.record
             if log_format == "json":

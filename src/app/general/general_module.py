@@ -30,7 +30,9 @@ class GeneralModule(IModule):
             CryptoService,
             CryptoService(
                 logging_service=logging_service,
-                config_service=config_service,
+                options=CryptoService.CryptoServiceOptions(
+                    jwt=config_service.config.jwt,
+                ),
             ),
         )
         self.provide_class(

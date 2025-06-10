@@ -21,8 +21,11 @@ class AccountModule(IModule):
             AuthService,
             AuthService(
                 logging_service=logging_service,
-                config_service=config_service,
                 crypto_service=crypto_service,
+                options=AuthService.AuthServiceOptions(
+                    platform=config_service.config.platform,
+                    jwt=config_service.config.jwt,
+                ),
             ),
         )
         self.provide_class(AuthController)

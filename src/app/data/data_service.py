@@ -1,22 +1,27 @@
+from typing import Annotated
+
+from pydantic import BaseModel, Field
 from tortoise import Tortoise
 
-from app.config.config_schema import Config
-from app.config.config_service import ConfigService
+from app.config.config_schema import DataConfig
 from app.logging.logger import Logger
 from app.logging.logging_service import LoggingService
 
 
 class DataService:
-    _config: Config
+    class DataServiceOptions(BaseModel):
+        data: Annotated[DataConfig, Field()]
+
     _logger: Logger
+    _options: DataServiceOptions
 
     def __init__(
         self,
-        config_service: ConfigService,
         logging_service: LoggingService,
+        options: DataServiceOptions,
     ) -> None:
-        self._config = config_service.config
         self._logger = logging_service.get_logger(__name__)
+        self._options = options
 
     @property
     def models(self) -> list[str]:
@@ -28,7 +33,7 @@ class DataService:
     async def connect(self) -> None:
         self._logger.info("Connecting to database")
         await Tortoise.init(
-            db_url=self._config.data.database_url.get_secret_value(),
+            db_url=self._options.data.database_url.get_secret_value(),
             modules={"models": self.models},
             use_tz=True,
             timezone="UTC",
