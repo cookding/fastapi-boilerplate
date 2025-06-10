@@ -70,6 +70,15 @@ def setup_sentry(container: Container) -> None:
 
 
 def setup_app(container: Container) -> FastAPI:
+    @asynccontextmanager
+    async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+        data_service: DataService = app.state.container.resolve(DataService)
+        try:
+            await data_service.connect()
+            yield
+        finally:
+            await data_service.disconnect()
+
     route_guards: list[IRouteGuard] = container.resolve_all(IRouteGuard)
     app = FastAPI(
         openapi_url=None,
@@ -96,16 +105,6 @@ def setup_app(container: Container) -> FastAPI:
         app.middleware("http")(http_middleware.dispatch)
 
     return app
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    data_service: DataService = app.state.container.resolve(DataService)
-    try:
-        await data_service.connect()
-        yield
-    finally:
-        await data_service.disconnect()
 
 
 def setup() -> FastAPI:
