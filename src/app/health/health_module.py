@@ -19,25 +19,10 @@ class HealthModule(IModule):
             name="postgres",
             failure_status=UNHEALTHY,
         )
-        self.provide_item(
-            HealthCheckManager,
-            health_check_manager,
-        )
 
-        health_controller = HealthController(
-            health_check_manager=health_check_manager,
-        )
-        self.provide_item(
-            HealthController,
-            health_controller,
-        )
+        self.provide_class(HealthModule, self)
+        self.provide_class(HealthCheckManager, health_check_manager)
+        self.provide_class(HealthController)
 
-        # export
-        self.export_item(
-            HealthModule,
-            self,
-        )
-        self.export_item(
-            IController,
-            health_controller,
-        )
+        self.export_class(HealthModule)
+        self.export_class(HealthController, IController)

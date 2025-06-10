@@ -10,29 +10,16 @@ from app.pet.pet_service import PetService
 class PetModule(IModule):
     @override
     def setup(self) -> None:
-        logging_service = self.import_item(LoggingService)
-        pet_service = PetService(
-            logging_service=logging_service,
-        )
-        self.provide_item(
-            PetService,
-            pet_service,
-        )
-        pet_controller = PetController(
-            logging_service=logging_service,
-            pet_service=pet_service,
-        )
-        self.provide_item(
-            PetController,
-            pet_controller,
-        )
+        logging_service = self.import_class(LoggingService)
 
-        # export
-        self.export_item(
-            PetModule,
-            self,
+        self.provide_class(PetModule, self)
+        self.provide_class(
+            PetService,
+            PetService(
+                logging_service=logging_service,
+            ),
         )
-        self.export_item(
-            IController,
-            pet_controller,
-        )
+        self.provide_class(PetController)
+
+        self.export_class(PetModule)
+        self.export_class(PetController, IController)

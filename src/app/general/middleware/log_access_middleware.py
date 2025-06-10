@@ -9,12 +9,12 @@ from app.logging.logging_service import LoggingService
 
 
 class LogAccessMiddleware(IHttpMiddleware):
-    _excludes: list[str]
     _logger: Logger
+    _excludes: list[str]
 
-    def __init__(self, excludes: list[str], logging_service: LoggingService):
-        self._excludes = excludes
+    def __init__(self, logging_service: LoggingService, excludes: list[str]) -> None:
         self._logger = logging_service.get_logger(__name__)
+        self._excludes = excludes
 
     @override
     async def dispatch(

@@ -9,23 +9,17 @@ from app.logging.logging_service import LoggingService
 class DataModule(IModule):
     @override
     def setup(self) -> None:
-        config_service = self.import_item(ConfigService)
-        logging_service = self.import_item(LoggingService)
-        data_service = DataService(
-            config_service=config_service,
-            logging_service=logging_service,
-        )
-        self.provide_item(
+        config_service = self.import_class(ConfigService)
+        logging_service = self.import_class(LoggingService)
+
+        self.provide_class(DataModule, self)
+        self.provide_class(
             DataService,
-            data_service,
+            DataService(
+                config_service=config_service,
+                logging_service=logging_service,
+            ),
         )
 
-        # export
-        self.export_item(
-            DataModule,
-            self,
-        )
-        self.export_item(
-            DataService,
-            data_service,
-        )
+        self.export_class(DataModule)
+        self.export_class(DataService)
