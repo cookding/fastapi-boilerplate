@@ -25,17 +25,17 @@ class CryptoService:
         return jwt.encode(
             payload={
                 **payload.model_dump(),
-                "iss": self._config.jwt_iss,
+                "iss": self._config.jwt.iss,
             },
-            key=self._config.jwt_private_key.get_secret_value(),
-            algorithm=self._config.jwt_signing_algorithm,
+            key=self._config.jwt.private_key.get_secret_value(),
+            algorithm=self._config.jwt.signing_algorithm,
         )
 
     def jwt_verify(self, token: str, audience: str | None = None) -> JWTTokenPayload:
         payload = jwt.decode(
             jwt=token,
-            key=self._config.jwt_public_key,
-            algorithms=self._config.jwt_signing_algorithm,
+            key=self._config.jwt.public_key,
+            algorithms=self._config.jwt.signing_algorithm,
             audience=audience,
             options={
                 "verify_aud": audience is not None,

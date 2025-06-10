@@ -10,7 +10,9 @@ app = setup()
 
 TORTOISE_ORM = {
     "connections": {
-        "default": app.state.container.resolve(ConfigService).config.database_url
+        "default": app.state.container.resolve(
+            ConfigService
+        ).config.data.database_url.get_secret_value(),
     },
     "apps": {
         "models": {
@@ -28,9 +30,9 @@ if __name__ == "__main__":
     logging_service: LoggingService = app.state.container.resolve(LoggingService)
     config = Config(
         app,
-        host=config_service.config.app_host,
-        port=config_service.config.app_port,
-        log_level=config_service.config.log_level,
+        host=config_service.config.app.host,
+        port=config_service.config.app.port,
+        log_level=config_service.config.log.level,
     )
     server = Server(config)
     logging_service.reset_logger(

@@ -45,7 +45,7 @@ class GeneralModule(IModule):
             LogAccessMiddleware,
             LogAccessMiddleware(
                 logging_service=logging_service,
-                excludes=config_service.config.log_access_excludes,
+                excludes=config_service.config.log.log_access_excludes,
             ),
         )
         # guards

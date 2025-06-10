@@ -43,7 +43,7 @@ def setup_sentry(container: Container) -> None:
     config_service: ConfigService = container.resolve(ConfigService)
     logging_service: LoggingService = container.resolve(LoggingService)
     logger = logging_service.get_logger(__name__)
-    if config_service.config.sentry_dsn:
+    if config_service.config.sentry.dsn.get_secret_value():
         logger.info("Sentry DSN is provided")
 
         def before_send(event: Event, hint: Hint) -> Event | None:
@@ -58,10 +58,10 @@ def setup_sentry(container: Container) -> None:
             return event
 
         sentry_sdk.init(
-            dsn=config_service.config.sentry_dsn,
-            environment=config_service.config.sentry_environment,
-            send_default_pii=config_service.config.sentry_send_default_pii,
-            traces_sample_rate=config_service.config.sentry_traces_sample_rate,
+            dsn=config_service.config.sentry.dsn.get_secret_value(),
+            environment=config_service.config.sentry.environment,
+            send_default_pii=config_service.config.sentry.send_default_pii,
+            traces_sample_rate=config_service.config.sentry.traces_sample_rate,
             before_send=before_send,
             before_send_transaction=before_send,
         )

@@ -28,7 +28,7 @@ class DataService:
     async def connect(self) -> None:
         self._logger.info("Connecting to database")
         await Tortoise.init(
-            db_url=self._config.database_url,
+            db_url=self._config.data.database_url.get_secret_value(),
             modules={"models": self.models},
             use_tz=True,
             timezone="UTC",

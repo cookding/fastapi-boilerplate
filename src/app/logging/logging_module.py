@@ -14,9 +14,9 @@ class LoggingModule(IModule):
         self.provide_class(
             LoggingService,
             LoggingService(
-                app_name=config_service.config.app_name,
-                log_format=config_service.config.log_format,
-                log_level=config_service.config.log_level,
+                app_name=config_service.config.app.name,
+                log_format=config_service.config.log.format,
+                log_level=config_service.config.log.level,
             ),
         )
 

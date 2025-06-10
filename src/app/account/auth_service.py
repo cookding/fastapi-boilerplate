@@ -41,18 +41,18 @@ class AuthService:
 
     async def verify(self, input: AuthVerifyInput) -> TokenOutput:
         if not (
-            input.username == self._config.admin_username
+            input.username == self._config.platform.admin_username
             and input.password.get_secret_value()
-            == self._config.admin_password.get_secret_value()
+            == self._config.platform.admin_password.get_secret_value()
         ):
             raise UnauthorizedException()
 
         issued_at = datetime.now(timezone.utc)
         refresh_expires_at = issued_at + timedelta(
-            seconds=self._config.jwt_refresh_token_expires_in_sec
+            seconds=self._config.jwt.refresh_token_expires_in_sec
         )
         access_expires_at = issued_at + timedelta(
-            seconds=self._config.jwt_refresh_token_expires_in_sec
+            seconds=self._config.jwt.access_token_expires_in_sec
         )
         refresh_token_record = await RefreshTokenRecord.create(
             id=uuid4().hex,
@@ -105,10 +105,10 @@ class AuthService:
 
         issued_at = datetime.now(timezone.utc)
         refresh_expires_at = issued_at + timedelta(
-            seconds=self._config.jwt_refresh_token_expires_in_sec
+            seconds=self._config.jwt.refresh_token_expires_in_sec
         )
         access_expires_at = issued_at + timedelta(
-            seconds=self._config.jwt_refresh_token_expires_in_sec
+            seconds=self._config.jwt.access_token_expires_in_sec
         )
         refresh_token_record = await RefreshTokenRecord.create(
             id=uuid4().hex,
