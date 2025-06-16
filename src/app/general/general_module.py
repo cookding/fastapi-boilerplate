@@ -15,6 +15,7 @@ from app.general.exception_handler.exception_handlers import (
 from app.general.general_controller import GeneralController
 from app.general.general_service import GeneralService
 from app.general.guard.auth_guard import AuthGuard
+from app.general.middleware.authentication_middleware import AuthenticationMiddleware
 from app.general.middleware.log_access_middleware import LogAccessMiddleware
 from app.logging.logging_service import LoggingService
 
@@ -50,6 +51,7 @@ class GeneralModule(IModule):
                 excludes=config_service.config.log.log_access_excludes,
             ),
         )
+        self.provide_class(AuthenticationMiddleware)
         # guards
         self.provide_class(AuthGuard)
         # exception handlers
@@ -62,6 +64,7 @@ class GeneralModule(IModule):
         self.export_class(GeneralController, IController)
         ## middlewares
         self.export_class(LogAccessMiddleware, IHttpMiddleware)
+        self.export_class(AuthenticationMiddleware, IHttpMiddleware)
         ## guards
         self.export_class(AuthGuard, IRouteGuard)
         ## exception handlers

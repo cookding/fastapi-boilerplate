@@ -1,4 +1,3 @@
-import re
 from typing import override
 
 from fastapi import Request
@@ -25,23 +24,13 @@ class AuthGuard(IRouteGuard):
         self,
         request: Request,
     ) -> None:
-        auth_claims: JWTTokenPayload | None = None
-        authorization = request.headers.get("authorization")
-        if authorization:
-            try:
-                auth_claims = self._crypto_service.jwt_verify(
-                    re.sub(r"Bearer\s+", "", authorization),
-                )
-            except:
-                self._logger.warning("invalid authorization token")
-        request.state.auth_claims = auth_claims
-
         route = request.scope.get("route")
         if route and isinstance(route, APIRoute):
             metadata = getattr(route.endpoint, "metadata", {})
 
             if "requires_auth" in metadata:
                 requires_auth = metadata["requires_auth"]
+                auth_claims: JWTTokenPayload | None = request.state.auth_claims
                 if (auth_claims is None) or (
                     auth_claims.aud not in requires_auth["allowed_audiences"]
                 ):
