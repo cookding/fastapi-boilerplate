@@ -20,7 +20,7 @@ class ConfigService:
     def __init__(self) -> None:
         self._config = Config(
             app=AppConfig(
-                name=os.getenv("APP_NAME", "central-control-service"),
+                name=os.getenv("APP_NAME", "fastapi-boilerplate"),
                 host=os.getenv("APP_HOST", "127.0.0.1"),
                 port=int(os.getenv("APP_PORT", "4000")),
             ),
