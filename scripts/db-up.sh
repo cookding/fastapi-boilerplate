@@ -3,7 +3,7 @@ set -ev
 
 pushd `dirname $0`
 
-docker-compose up -d
+docker compose up -d
 
 STATUS=""
 until [[ ${STATUS} = "/var/run/postgresql:5432 - accepting connections" ]]; do
