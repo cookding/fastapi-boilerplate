@@ -48,7 +48,7 @@ class CryptoService:
         return JWTTokenPayload(
             **{
                 **payload,
-                "iat": datetime.fromtimestamp(payload["iat"], timezone.utc),
+                "nbf": datetime.fromtimestamp(payload["nbf"], timezone.utc),
                 "exp": datetime.fromtimestamp(payload["exp"], timezone.utc),
             }
         )

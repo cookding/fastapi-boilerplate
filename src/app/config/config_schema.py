@@ -31,6 +31,7 @@ class JwtConfig(BaseModel):
     signing_algorithm: Annotated[str, Field()]
     private_key: Annotated[SecretStr, Field()]
     public_key: Annotated[str, Field()]
+    nbf_clock_skew_in_sec: Annotated[int, Field()]
     access_token_expires_in_sec: Annotated[int, Field()]
     refresh_token_expires_in_sec: Annotated[int, Field()]
 

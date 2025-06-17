@@ -138,7 +138,7 @@ async def test_auth_refresh_token_validation(
     expired_refresh_token = app_manager.generate_updated_jwt_token(
         refresh_token,
         {
-            "iat": datetime.now(timezone.utc) - timedelta(seconds=600),
+            "nbf": datetime.now(timezone.utc) - timedelta(seconds=600),
             "exp": datetime.now(timezone.utc) - timedelta(seconds=300),
         },
     )

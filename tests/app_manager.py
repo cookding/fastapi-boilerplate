@@ -31,7 +31,7 @@ class AppManager:
             "jti": uuid4().hex,
             "sub": os.getenv("ADMIN_USERNAME", "admin"),
             "aud": "API_ACCESS",
-            "iat": datetime.now(timezone.utc),
+            "nbf": datetime.now(timezone.utc) - timedelta(hours=1),
             "exp": datetime.now(timezone.utc) + timedelta(hours=1),
         }
         token = jwt.encode(

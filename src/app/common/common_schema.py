@@ -122,5 +122,5 @@ class JWTTokenPayload(CamelCaseModel):
     jti: Annotated[str, Field()]
     sub: Annotated[str, Field()]
     aud: Annotated[str, Field()]
-    iat: Annotated[datetime, Field()]
+    nbf: Annotated[datetime, Field()]
     exp: Annotated[datetime, Field()]

@@ -53,6 +53,9 @@ class AuthService:
             raise UnauthorizedException()
 
         issued_at = datetime.now(timezone.utc)
+        not_before = issued_at - timedelta(
+            seconds=self._options.jwt.nbf_clock_skew_in_sec
+        )
         refresh_expires_at = issued_at + timedelta(
             seconds=self._options.jwt.refresh_token_expires_in_sec
         )
@@ -69,7 +72,7 @@ class AuthService:
             jti=refresh_token_record.id,
             sub=refresh_token_record.username,
             aud=JWTAudience.TOKEN_REFRESH,
-            iat=issued_at,
+            nbf=not_before,
             exp=refresh_expires_at,
         )
         refresh_token = self._crypto_service.jwt_sign(refresh_token_payload)
@@ -77,7 +80,7 @@ class AuthService:
             jti=refresh_token_record.id,
             sub=refresh_token_record.username,
             aud=JWTAudience.API_ACCESS,
-            iat=issued_at,
+            nbf=not_before,
             exp=access_expires_at,
         )
         access_token = self._crypto_service.jwt_sign(access_token_payload)
@@ -109,6 +112,9 @@ class AuthService:
             raise InvalidTokenException()
 
         issued_at = datetime.now(timezone.utc)
+        not_before = issued_at - timedelta(
+            seconds=self._options.jwt.nbf_clock_skew_in_sec
+        )
         refresh_expires_at = issued_at + timedelta(
             seconds=self._options.jwt.refresh_token_expires_in_sec
         )
@@ -126,7 +132,7 @@ class AuthService:
             jti=refresh_token_record.id,
             sub=refresh_token_record.username,
             aud=JWTAudience.TOKEN_REFRESH,
-            iat=issued_at,
+            nbf=not_before,
             exp=refresh_expires_at,
         )
         refresh_token = self._crypto_service.jwt_sign(refresh_token_payload)
@@ -134,7 +140,7 @@ class AuthService:
             jti=refresh_token_record.id,
             sub=refresh_token_record.username,
             aud=JWTAudience.API_ACCESS,
-            iat=issued_at,
+            nbf=not_before,
             exp=access_expires_at,
         )
         access_token = self._crypto_service.jwt_sign(access_token_payload)

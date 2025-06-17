@@ -61,6 +61,7 @@ class ConfigService:
                 public_key=bytes.fromhex(
                     os.getenv("JWT_PUBLIC_KEY_HEX", ""),
                 ).decode(),
+                nbf_clock_skew_in_sec=int(os.getenv("JWT_NBF_CLOCK_SKEW_IN_SEC", "60")),
                 access_token_expires_in_sec=int(
                     os.getenv("JWT_ACCESS_TOKEN_EXPIRES_IN_SEC", "1800")
                 ),
