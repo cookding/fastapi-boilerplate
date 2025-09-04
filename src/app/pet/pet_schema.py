@@ -5,7 +5,7 @@ from pydantic import Field
 
 from app.common.common_schema import (
     CamelCaseModel,
-    CommonQueryParams,
+    CommonListQueryParams,
     DateTimeFilter,
     StringFilter,
 )
@@ -45,5 +45,5 @@ class PetWhereInput(CamelCaseModel):
         return self.model_dump(exclude_none=True)
 
 
-class PetQueryParams(CommonQueryParams):
+class PetQueryParams(CommonListQueryParams):
     filter: Annotated[PetWhereInput, Field(default={})]

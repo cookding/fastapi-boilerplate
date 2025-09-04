@@ -64,9 +64,6 @@ class PaginationQueryParams(CamelCaseModel):
 
 
 class CommonQueryParams(CamelCaseModel):
-    fields: Annotated[list[str], Field(default=[])]
-    page: Annotated[PaginationQueryParams, Field(default=PaginationQueryParams())]
-
     @classmethod
     def _top_level_query_field_transform(cls, key: str, value: Any) -> Any:
         res = value
@@ -93,6 +90,11 @@ class CommonQueryParams(CamelCaseModel):
             f"{key}": cls._top_level_query_field_transform(key, value)
             for key, value in data.items()
         }
+
+
+class CommonListQueryParams(CommonQueryParams):
+    fields: Annotated[list[str], Field(default=[])]
+    page: Annotated[PaginationQueryParams, Field(default=PaginationQueryParams())]
 
 
 T = TypeVar("T")
