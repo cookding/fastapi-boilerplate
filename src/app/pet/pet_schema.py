@@ -33,17 +33,17 @@ class Pet(CamelCaseModel):
 
 class PetCreateInput(CamelCaseModel):
     name: Annotated[str, Field(max_length=20)]
-    avatar_url: Annotated[str | None, Field(default=None, max_length=2000)]
+    avatar_url: Annotated[str | None, Field(max_length=2000)] = None
 
 
 class PetWhereInput(CamelCaseModel):
-    name: Annotated[StringFilter | None, Field(default=None)]
-    created_at: Annotated[DateTimeFilter | None, Field(default=None)]
-    updated_at: Annotated[DateTimeFilter | None, Field(default=None)]
+    name: Annotated[StringFilter | None, Field()] = None
+    created_at: Annotated[DateTimeFilter | None, Field()] = None
+    updated_at: Annotated[DateTimeFilter | None, Field()] = None
 
     def to_dict(self) -> dict[str, Any]:
         return self.model_dump(exclude_none=True)
 
 
 class PetQueryParams(CommonListQueryParams):
-    filter: Annotated[PetWhereInput, Field(default={})]
+    filter: Annotated[PetWhereInput, Field()] = PetWhereInput()

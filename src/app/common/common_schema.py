@@ -59,8 +59,8 @@ class CamelCaseModel(BaseModel):
 
 
 class PaginationQueryParams(CamelCaseModel):
-    offset: Annotated[int, Field(0, ge=0)]
-    limit: Annotated[int, Field(10, ge=1, le=100)]
+    offset: Annotated[int, Field(ge=0)] = 0
+    limit: Annotated[int, Field(ge=1, le=100)] = 10
 
 
 class CommonQueryParams(CamelCaseModel):
@@ -93,8 +93,8 @@ class CommonQueryParams(CamelCaseModel):
 
 
 class CommonListQueryParams(CommonQueryParams):
-    fields: Annotated[list[str], Field(default=[])]
-    page: Annotated[PaginationQueryParams, Field(default=PaginationQueryParams())]
+    fields: Annotated[list[str], Field()] = []
+    page: Annotated[PaginationQueryParams, Field()] = PaginationQueryParams()
 
 
 T = TypeVar("T")
