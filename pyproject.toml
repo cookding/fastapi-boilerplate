@@ -46,6 +46,8 @@ test.cmd = "pytest -r A"
 test.env = { LOG_LEVEL = "error" }
 test-cov.cmd = "pytest --cov-config=.coveragerc --verbosity=3 --cov=src/app --cov-branch --cov-report term-missing tests/"
 test-cov.env = { LOG_LEVEL = "error" }
+test-only.cmd = "pytest -r A -m only"
+test-only.env = { LOG_LEVEL = "error" }
 license-check = "licensecheck --zero"
 
 [tool.pdm.dev-dependencies]
