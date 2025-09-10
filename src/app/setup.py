@@ -4,6 +4,7 @@ from typing import Any, AsyncGenerator
 import sentry_sdk
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from punq import Container
 from sentry_sdk.types import Event, Hint
 
@@ -103,6 +104,14 @@ def setup_app(container: Container) -> FastAPI:
     http_middlewares: list[IHttpMiddleware] = container.resolve_all(IHttpMiddleware)
     for http_middleware in http_middlewares:
         app.middleware("http")(http_middleware.dispatch)
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     return app
 
