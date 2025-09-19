@@ -38,7 +38,12 @@ class DataService:
             use_tz=True,
             timezone="UTC",
         )
-        self._logger.info("Connected to database")
+        try:
+            await Tortoise.get_connection("default").execute_query("SELECT 1")
+            self._logger.info("Connected to database")
+        except Exception as e:
+            self._logger.error("Failed to connect to database")
+            raise e
 
     async def disconnect(self) -> None:
         self._logger.info("Disconnecting database")
