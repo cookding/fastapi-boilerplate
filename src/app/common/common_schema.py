@@ -97,6 +97,11 @@ class CommonListQueryParams(CommonQueryParams):
     page: Annotated[PaginationQueryParams, Field()] = PaginationQueryParams()
 
 
+class CommonWhereInput(CamelCaseModel):
+    def to_query_dict(self) -> dict[str, Any]:
+        return self.model_dump(exclude_none=True)
+
+
 T = TypeVar("T")
 
 

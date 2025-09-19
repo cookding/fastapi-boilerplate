@@ -1,11 +1,12 @@
 from datetime import datetime
-from typing import Annotated, Any
+from typing import Annotated
 
 from pydantic import Field
 
 from app.common.common_schema import (
     CamelCaseModel,
     CommonListQueryParams,
+    CommonWhereInput,
     DateTimeFilter,
     StringFilter,
 )
@@ -36,13 +37,10 @@ class PetCreateInput(CamelCaseModel):
     avatar_url: Annotated[str | None, Field(max_length=2000)] = None
 
 
-class PetWhereInput(CamelCaseModel):
+class PetWhereInput(CommonWhereInput):
     name: Annotated[StringFilter | None, Field()] = None
     created_at: Annotated[DateTimeFilter | None, Field()] = None
     updated_at: Annotated[DateTimeFilter | None, Field()] = None
-
-    def to_dict(self) -> dict[str, Any]:
-        return self.model_dump(exclude_none=True)
 
 
 class PetQueryParams(CommonListQueryParams):

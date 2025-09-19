@@ -20,13 +20,16 @@ class PetService:
 
     async def create(self, pet: PetCreateInput) -> Pet:
         self._logger.info("creating pet")
-        created_pet = await PetRecord.create(id=uuid4().hex, **pet.model_dump())
+        created_pet = await PetRecord.create(
+            **pet.model_dump(),
+            id=uuid4().hex,
+        )
         self._logger.info("created pet", data={"id": created_pet.id})
         return created_pet.to_entity()
 
     async def query(self, filter: PetWhereInput, offset: int, limit: int) -> list[Pet]:
         self._logger.info("querying pets")
-        q = json2q.to_q(filter.to_dict(), Q)
+        q = json2q.to_q(filter.to_query_dict(), Q)
         pets = (
             await PetRecord.filter(q)
             .order_by("-created_at", "id")
@@ -41,6 +44,6 @@ class PetService:
 
     async def count(self, filter: PetWhereInput) -> int:
         self._logger.info("counting pets")
-        q = json2q.to_q(filter.to_dict(), Q)
+        q = json2q.to_q(filter.to_query_dict(), Q)
         count = await PetRecord.filter(q).count()
         return count
